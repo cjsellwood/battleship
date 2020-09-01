@@ -1,9 +1,15 @@
 import React, { Component } from "react";
-import "./App.css";
+import classes from "./App.module.css";
+import Game from "./components/Game";
 
 class App extends Component {
   render() {
-    return <div style={{ fontFamily: "Poppins" }}>Battleship </div>;
+    return (
+      <div>
+        <div className={classes.Top}>Battleship</div>
+        <Game/>
+      </div>
+    );
   }
 }
 

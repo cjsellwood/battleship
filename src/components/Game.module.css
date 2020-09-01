@@ -1,0 +1,18 @@
+.Container {
+  outline: 2px solid green;
+  display: flex;
+  height: 80vh;
+}
+
+.Ships {
+  width: 400px;
+}
+
+.Grid {
+  display: grid;
+  grid-template-rows: repeat(10, 50px);
+  grid-template-columns: repeat(10, 50px);
+  grid-column-gap: 1px;
+  margin: 20px;
+}
+
