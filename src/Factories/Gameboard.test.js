@@ -45,19 +45,7 @@ test("Test placement of ship", () => {
 });
 
 test("Test attack on board that misses", () => {
-  const testGrid = [
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "x", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-  ];
-  expect(Gameboard().receiveAttack(5, 5)).toStrictEqual(testGrid);
+  expect(Gameboard().receiveAttack(5, 5)).toStrictEqual(true);
 });
 
 test("Test attack on board that has already been hit", () => {
@@ -68,20 +56,8 @@ test("Test attack on board that has already been hit", () => {
 
 test("Test attack on board with ship", () => {
   const testGameboard = Gameboard();
-  const testGrid = [
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "Battleship0", "x", "Battleship2", "Battleship3", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-  ];
   testGameboard.placeShip("Battleship", 5, 5);
-  expect(testGameboard.receiveAttack(5, 6)).toStrictEqual(testGrid);
+  expect(testGameboard.receiveAttack(5, 6)).toStrictEqual(true);
 });
 
 test("Test if all ships sunk with a ship on board", () => {

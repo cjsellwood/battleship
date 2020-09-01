@@ -21,7 +21,7 @@ const Gameboard = () => {
     if (grid[row - 1][column - 1] === "") {
       // Set as missed
       grid[row - 1][column - 1] = "x";
-      return grid;
+      return true;
     } else if (grid[row - 1][column - 1] === "x") {
       // Disallow
       return false;
@@ -35,7 +35,7 @@ const Gameboard = () => {
 
       // Mark as hit
       grid[row - 1][column - 1] = "x";
-      return grid;
+      return true;
     }
   };
 
