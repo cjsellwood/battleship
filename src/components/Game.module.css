@@ -6,11 +6,25 @@
 }
 
 .Ships {
-  width: 400px;
-  height: 500px;
+  width: 21vw;
+  height: 30vw;
   margin: 20px;
   outline: 1px solid rgb(182, 182, 182);
   justify-self: flex-start;
+}
+
+.Ships > div {
+
+  height: 3vw;
+  margin: 10px;
+  display: flex;
+}
+
+.Ships > div > div {
+  width: 3vw;
+  margin: 1px;
+  height: 3vw;
+  background-color: gray;
 }
 
 .Grid {

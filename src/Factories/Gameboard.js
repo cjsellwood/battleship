@@ -1,6 +1,13 @@
 import Ship from "./Ship";
 
 const Gameboard = () => {
+  let ships = [
+    Ship("Carrier"),
+    Ship("Battleship"),
+    Ship("Destroyer"),
+    Ship("Submarine"),
+    Ship("Patrol Boat")
+  ]
   // Create 10 x 10 grid
   let grid = [];
   for (let i = 0; i < 10; i++) {
@@ -9,10 +16,9 @@ const Gameboard = () => {
   const getGrid = () => grid;
 
   // Place ship in grid
-  const placeShip = (name, row, column) => {
-    let ship = Ship(name);
-    for (let i = 0; i < ship.length; i++) {
-      grid[row - 1][column - 1 + i] = ship.getName() + i;
+  const placeShip = (shipObj, row, column) => {
+    for (let i = 0; i < shipObj.length; i++) {
+      grid[row - 1][column - 1 + i] = shipObj.getName() + i;
     }
     return grid;
   };
@@ -41,16 +47,23 @@ const Gameboard = () => {
 
   const allSunk = () => { 
     let sunk = true;
-    grid.forEach((row) => {
-      row.forEach((column) => {
-        if (column !== "" && column !== "x") {
-          sunk = false;
-        }
-      })
+    // grid.forEach((row) => {
+    //   row.forEach((column) => {
+    //     if (column !== "" && column !== "x") {
+    //       sunk = false;
+    //     }
+    //   })
+    // })
+    // return sunk;
+    ships.forEach((ship) => {
+      if (!ship.isSunk) {
+        sunk = false;
+      }
     })
     return sunk;
   }
   return {
+    ships,
     grid,
     getGrid,
     placeShip,

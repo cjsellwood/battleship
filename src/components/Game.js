@@ -11,6 +11,7 @@ class Game extends Component {
     currentTurn: "human",
   };
 
+  // When clicked on a square of the computers board
   clickBoard = (event) => {
     // Only Allow when humans turn
     if (this.state.currentTurn !== "human") {
@@ -35,10 +36,18 @@ class Game extends Component {
   };
 
   render() {
+    const createShips = [];
+    this.state.human.gameboard.ships.forEach((ship) => {
+      let squares = [];
+      for (let i = 0; i < ship.length; i++) {
+        squares.push(<div></div>);
+      }
+      createShips.push(<div>{squares}</div>);
+    })
     return (
       <React.Fragment>
         <div className={classes.Container}>
-          <div className={classes.Ships}>Ships</div>
+          <div className={classes.Ships}>{createShips}</div>
           <div className={classes.Grid}>
             <HumanGrid grid={this.state.human.gameboard.grid} />
           </div>
