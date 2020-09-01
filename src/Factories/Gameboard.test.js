@@ -1,7 +1,7 @@
 import Gameboard from "./Gameboard";
 
 test("Get current grid", () => {
-  const mockGrid = [
+  const testGrid = [
     ["", "", "", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", "", "", ""],
@@ -14,11 +14,11 @@ test("Get current grid", () => {
     ["", "", "", "", "", "", "", "", "", ""],
   ];
 
-  expect(Gameboard().getGrid()).toStrictEqual(mockGrid);
+  expect(Gameboard().getGrid()).toStrictEqual(testGrid);
 });
 
 test("Test placement of ship", () => {
-  const mockGrid = [
+  const testGrid = [
     ["", "", "", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", "", "", ""],
@@ -41,5 +41,63 @@ test("Test placement of ship", () => {
     ["", "", "", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", "", "", ""],
   ];
-  expect(Gameboard().placeShip("Battleship", 5, 5)).toStrictEqual(mockGrid);
+  expect(Gameboard().placeShip("Battleship", 5, 5)).toStrictEqual(testGrid);
+});
+
+test("Test attack on board that misses", () => {
+  const testGrid = [
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "x", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+  ];
+  expect(Gameboard().receiveAttack(5, 5)).toStrictEqual(testGrid);
+});
+
+test("Test attack on board that has already been hit", () => {
+  const testGameboard = Gameboard();
+  testGameboard.receiveAttack(5, 5);
+  expect(testGameboard.receiveAttack(5, 5)).toBe(false);
+});
+
+test("Test attack on board with ship", () => {
+  const testGameboard = Gameboard();
+  const testGrid = [
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "Battleship0", "x", "Battleship2", "Battleship3", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+  ];
+  testGameboard.placeShip("Battleship", 5, 5);
+  expect(testGameboard.receiveAttack(5, 6)).toStrictEqual(testGrid);
+});
+
+test("Test if all ships sunk with a ship on board", () => {
+  const testGameboard = Gameboard();
+  testGameboard.placeShip("Battleship", 5, 5);
+  expect(testGameboard.allSunk()).toBe(false);
+});
+
+test("Test if all ships sunk with destroyed ship and some misses", () => {
+  const testGameboard = Gameboard();
+  testGameboard.placeShip("Battleship", 5, 5);
+  testGameboard.receiveAttack(5, 5)
+  testGameboard.receiveAttack(5, 6)
+  testGameboard.receiveAttack(5, 7)
+  testGameboard.receiveAttack(5, 8)
+  testGameboard.receiveAttack(1, 1)
+  testGameboard.receiveAttack(8, 10)
+  expect(testGameboard.allSunk()).toBe(true);
 });
