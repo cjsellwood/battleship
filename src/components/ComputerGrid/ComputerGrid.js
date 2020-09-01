@@ -13,7 +13,9 @@ const computerGrid = (props) => {
               column={index2 + 1}
               key={`${index} ${index2}`}
               className={classes.Column}
-            ></div>
+            >
+              {props.grid[index][index2]}
+            </div>
           );
         })}
       </div>

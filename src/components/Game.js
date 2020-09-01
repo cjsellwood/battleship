@@ -8,28 +8,49 @@ class Game extends Component {
   state = {
     human: Player("human"),
     computer: Player("computer"),
+    currentTurn: "human",
   };
 
   clickBoard = (event) => {
-    console.log(event.target);
+    // Only Allow when humans turn
+    if (this.state.currentTurn !== "human") {
+      return;
+    }
+    // Stop clicking on already attacked space
+    if (event.target.textContent === "x") {
+      return;
+    }
+    console.log(event);
+    let newComputer = this.state.computer;
+    const row = event.target.getAttribute("row");
+    const column = event.target.getAttribute("column");
+    if (this.state.human.attack(newComputer, row, column)) {
+      this.setState({ computer: newComputer, currentTurn: "computer" });
+    }
+    setTimeout(() => {
+      let newHuman = this.state.human;
+      this.state.computer.computerAttack(newHuman);
+      this.setState({ human: newHuman, currentTurn: "human" });
+    }, 1000);
   };
 
   render() {
     return (
-      <div className={classes.Container}>
-        <div className={classes.Ships}>Ships</div>
-        <div className={classes.Grid}>
-          <HumanGrid
-            grid={this.state.human.gameboard.grid}
-          />
+      <React.Fragment>
+        <div className={classes.Container}>
+          <div className={classes.Ships}>Ships</div>
+          <div className={classes.Grid}>
+            <HumanGrid grid={this.state.human.gameboard.grid} />
+          </div>
+          <div className={classes.Grid}>
+            <ComputerGrid
+              grid={this.state.computer.gameboard.grid}
+              clickBoard={(event) => this.clickBoard(event)}
+            />
+          </div>
         </div>
-        <div className={classes.Grid}>
-          <ComputerGrid
-            grid={this.state.computer.gameboard.grid}
-            clickBoard={(event) => this.clickBoard(event)}
-          />
-        </div>
-      </div>
+        <div className={classes.Turn}>{this.state.currentTurn}</div>
+      </React.Fragment>
     );
   }
 }
