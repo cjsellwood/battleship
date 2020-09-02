@@ -12,6 +12,22 @@
   height: 3vw;
   text-align: center;
   line-height: 3vw;
-  background-color: rgb(187, 205, 228);
+  background-color: rgb(161, 202, 255);
 }
 
+
+@media only screen and (max-width: 600px) {
+  .Row{
+    width: 9vw;
+    height: 9vw;
+    font-size: 9vw;
+  }
+  
+  .Column {
+    width: 9vw;
+    height: 9vw;
+    text-align: center;
+    line-height: 9vw;
+  }
+
+}
