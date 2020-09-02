@@ -6,15 +6,15 @@ import HumanGrid from "./HumanGrid/HumanGrid";
 
 class Game extends Component {
   state = {
-    human: Player("human"),
-    computer: Player("computer"),
-    currentTurn: "human",
+    human: Player("Human"),
+    computer: Player("Computer"),
+    currentTurn: "Human",
   };
 
   // When clicked on a square of the computers board
   clickBoard = (event) => {
     // Only Allow when humans turn
-    if (this.state.currentTurn !== "human") {
+    if (this.state.currentTurn !== "Human") {
       return;
     }
     // Stop clicking on already attacked space
@@ -26,12 +26,12 @@ class Game extends Component {
     const row = event.target.getAttribute("row");
     const column = event.target.getAttribute("column");
     if (this.state.human.attack(newComputer, row, column)) {
-      this.setState({ computer: newComputer, currentTurn: "computer" });
+      this.setState({ computer: newComputer, currentTurn: "Computer" });
     }
     setTimeout(() => {
       let newHuman = this.state.human;
       this.state.computer.computerAttack(newHuman);
-      this.setState({ human: newHuman, currentTurn: "human" });
+      this.setState({ human: newHuman, currentTurn: "Human" });
     }, 1000);
   };
 
@@ -40,25 +40,37 @@ class Game extends Component {
     this.state.human.gameboard.ships.forEach((ship) => {
       let squares = [];
       for (let i = 0; i < ship.length; i++) {
-        squares.push(<div></div>);
+        squares.push(
+          <div
+            name={ship.getName()}
+            position={i}
+            key={ship.getName() + i}
+          ></div>
+        );
       }
-      createShips.push(<div>{squares}</div>);
-    })
+      createShips.push(<div key={ship.getName()}>{squares}</div>);
+    });
     return (
       <React.Fragment>
         <div className={classes.Container}>
           <div className={classes.Ships}>{createShips}</div>
-          <div className={classes.Grid}>
-            <HumanGrid grid={this.state.human.gameboard.grid} />
+          <div>
+            <div className={classes.Label}>Human</div>
+            <div className={classes.Grid}>
+              <HumanGrid grid={this.state.human.gameboard.grid} />
+            </div>
           </div>
-          <div className={classes.Grid}>
-            <ComputerGrid
-              grid={this.state.computer.gameboard.grid}
-              clickBoard={(event) => this.clickBoard(event)}
-            />
+          <div>
+            <div className={classes.Label}>Computer</div>
+            <div className={classes.Grid}>
+              <ComputerGrid
+                grid={this.state.computer.gameboard.grid}
+                clickBoard={(event) => this.clickBoard(event)}
+              />
+            </div>
           </div>
         </div>
-        <div className={classes.Turn}>{this.state.currentTurn}</div>
+        <div className={classes.Turn}>Go: {this.state.currentTurn}</div>
       </React.Fragment>
     );
   }
