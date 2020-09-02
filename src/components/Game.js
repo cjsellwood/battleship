@@ -3,6 +3,10 @@ import Player from "../Factories/Player";
 import classes from "./Game.module.css";
 import ComputerGrid from "./ComputerGrid/ComputerGrid";
 import HumanGrid from "./HumanGrid/HumanGrid";
+import Ships from "./Ships/Ships";
+
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 class Game extends Component {
   state = {
@@ -36,24 +40,10 @@ class Game extends Component {
   };
 
   render() {
-    const createShips = [];
-    this.state.human.gameboard.ships.forEach((ship) => {
-      let squares = [];
-      for (let i = 0; i < ship.length; i++) {
-        squares.push(
-          <div
-            name={ship.getName()}
-            position={i}
-            key={ship.getName() + i}
-          ></div>
-        );
-      }
-      createShips.push(<div key={ship.getName()}>{squares}</div>);
-    });
     return (
-      <React.Fragment>
+      <DndProvider backend={HTML5Backend}>
         <div className={classes.Container}>
-          <div className={classes.Ships}>{createShips}</div>
+          <Ships ships={this.state.human.gameboard.ships} />
           <div>
             <div className={classes.Label}>Human</div>
             <div className={classes.Grid}>
@@ -71,7 +61,7 @@ class Game extends Component {
           </div>
         </div>
         <div className={classes.Turn}>Go: {this.state.currentTurn}</div>
-      </React.Fragment>
+      </DndProvider>
     );
   }
 }

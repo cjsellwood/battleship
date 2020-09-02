@@ -4,26 +4,6 @@
   align-items: center;
 }
 
-.Ships {
-  width: 21vw;
-  height: auto;
-  margin: 20px;
-}
-
-.Ships > div {
-  height: 3vw;
-  margin: 10px;
-  width: fit-content;
-}
-
-.Ships > div > div {
-  width: 3vw;
-  margin: 0px 1px;
-  height: 3vw;
-  background-color: gray;
-  display: inline-block;
-}
-
 .Grid {
   display: grid;
   grid-template-rows: repeat(10, 3vw);

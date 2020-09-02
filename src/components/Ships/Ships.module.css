@@ -1,0 +1,36 @@
+.Ships {
+  width: 21vw;
+  height: auto;
+  margin: 20px;
+}
+
+.Ships > div {
+  height: 3vw;
+  margin: 10px;
+  width: fit-content;
+}
+
+.Ships > div > div {
+  width: 3vw;
+  margin: 0px 1px;
+  height: 3vw;
+  background-color: gray;
+  display: inline-block;
+}
+
+@media only screen and (max-width: 600px) {
+  .Ships {
+    width: 90vw;
+    height: 90vw;
+    margin: auto;
+  }
+
+  .Ships > div {
+    height: 14vw;
+  }
+
+  .Ships > div > div {
+    width: 9vw;
+    height: 9vw;
+  }
+}
