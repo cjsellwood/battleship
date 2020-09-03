@@ -62,20 +62,25 @@ class Game extends Component {
     console.log(event.currentTarget);
     let ship = event.currentTarget;
 
-    // console.log(event.pageX, event.pageY);
-    // console.log(event.clientX, event.clientY);
     let shiftX = event.clientX - ship.getBoundingClientRect().left;
     let shiftY = event.clientY - ship.getBoundingClientRect().top;
-    // console.log(shiftX, shiftY);
 
     // Handle move of mouse with ship attached to it
     let currentDroppable = null;
     let shipName = event.target.getAttribute("name");
     let position = Number(event.target.getAttribute("position"));
     let shipLength = this.state.human.gameboard.ships[shipName].getLength();
+    let finalPosition = {
+      row: null,
+      column: null,
+    };
+    let canDrop = false;
+    let finalElements = [];
+
     const onMouseMove = (event) => {
       ship.style.opacity = "0.7";
       ship.style.position = "absolute";
+      ship.style.outline = "2px solid white"
       ship.style.left = event.pageX - shiftX - 10 + "px";
       ship.style.top = event.pageY - shiftY - 10 + "px";
 
@@ -127,7 +132,16 @@ class Game extends Component {
         );
       }
 
-      console.log(elements);
+      // If over a ship return 
+      let exit = false;
+      elements.forEach((element) => {
+        console.log(element.style.backgroundColor)
+        if (element.style.backgroundColor === "gray") {
+          exit = true;
+        }
+      })
+      if (exit) return;
+
       elements.forEach((element) => {
         element.style.backgroundColor = "rgb(161, 202, 255)";
       });
@@ -146,7 +160,7 @@ class Game extends Component {
       console.log("first piece", firstPiece);
 
       // If ship extends over left or right side of board
-      if (firstPiece <= 0 || firstPiece + shipLength - 2>= 10) {
+      if (firstPiece <= 0 || firstPiece + shipLength - 2 >= 10) {
         return;
       }
 
@@ -160,10 +174,27 @@ class Game extends Component {
         );
       }
 
-      console.log(elements);
+      // If over a ship return 
+      let exit = false;
+      elements.forEach((element) => {
+        console.log(element.style.backgroundColor)
+        if (element.style.backgroundColor === "gray") {
+          console.log("**($#&%&*($#%*&(")
+          exit = true;
+        }
+      })
+      if (exit) return;
+
+      // Change colour on hover
       elements.forEach((element) => {
         element.style.backgroundColor = "lightGray";
       });
+
+      // Record where it would be dropped right now
+      canDrop = true;
+      finalElements = elements;
+      finalPosition.row = firstPiece;
+      finalPosition.column = column;
     };
 
     // Handle letting go of mouse button
@@ -171,9 +202,26 @@ class Game extends Component {
       document.removeEventListener("mousemove", onMouseMove);
       this.setState({ disableRotation: false });
       document.removeEventListener("mouseup", onMouseUp);
-      //ship.style.display = "none";
+      if (canDrop) {
+        console.log(finalPosition.row, finalPosition.column);
+        ship.style.display = "none";
+        console.log(
+          this.state.human.gameboard.placeShip(
+            this.state.human.gameboard.ships[shipName],
+            "Horizontal",
+            finalPosition.column,
+            finalPosition.row
+          )
+        );
+        console.log(finalElements);
+        finalElements.forEach((element) => {
+          element.style.backgroundColor = "gray";
+        });
+      }
+      //console.log(this.state.human.gameboard.getGrid())
       return;
     };
+
     document.addEventListener("mouseup", onMouseUp);
   };
 

@@ -14,7 +14,9 @@ const humanGrid = (props) => {
               className={classes.Column}
               drop="droppable"
             >
-              {props.grid[index][index2]}
+              {props.grid[index][index2] === "x"
+                ? props.grid[index][index2]
+                : null}
             </div>
           );
         })}

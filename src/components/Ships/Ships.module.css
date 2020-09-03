@@ -8,6 +8,7 @@
   height: 3vw;
   margin: 10px;
   width: fit-content;
+  cursor: pointer;
 }
 
 .Ships > div > div {
