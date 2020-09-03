@@ -16,11 +16,19 @@ const Gameboard = () => {
   const getGrid = () => grid;
 
   // Place ship in grid
-  const placeShip = (shipObj, row, column) => {
-    for (let i = 0; i < shipObj.length; i++) {
-      grid[row - 1][column - 1 + i] = shipObj.getName() + i;
+  const placeShip = (shipObj, orientation, row, column) => {
+    if (orientation === "Horizontal") {
+      for (let i = 0; i < shipObj.length; i++) {
+        grid[row - 1][column - 1 + i] = shipObj.getName() + i;
+      }
+      return grid;
+    } else {
+      for (let i = 0; i < shipObj.length; i++) {
+        grid[row - 1 + i][column - 1] = shipObj.getName() + i;
+      }
+      return grid;
     }
-    return grid;
+
   };
 
   const receiveAttack = (row, column) => {
@@ -47,20 +55,20 @@ const Gameboard = () => {
 
   const allSunk = () => { 
     let sunk = true;
-    // grid.forEach((row) => {
-    //   row.forEach((column) => {
-    //     if (column !== "" && column !== "x") {
-    //       sunk = false;
-    //     }
-    //   })
-    // })
-    // return sunk;
-    ships.forEach((ship) => {
-      if (!ship.isSunk) {
-        sunk = false;
-      }
+    grid.forEach((row) => {
+      row.forEach((column) => {
+        if (column !== "" && column !== "x") {
+          sunk = false;
+        }
+      })
     })
     return sunk;
+    // ships.forEach((ship) => {
+    //   if (!ship.isSunk) {
+    //     sunk = false;
+    //   }
+    // })
+    // return sunk;
   }
   return {
     ships,

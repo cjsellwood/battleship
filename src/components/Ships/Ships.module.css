@@ -18,6 +18,10 @@
   display: inline-block;
 }
 
+.Vertical {
+  transform: rotate(270deg);
+}
+
 @media only screen and (max-width: 600px) {
   .Ships {
     width: 90vw;

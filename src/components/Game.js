@@ -13,6 +13,9 @@ class Game extends Component {
     human: Player("Human"),
     computer: Player("Computer"),
     currentTurn: "Human",
+    orientation: "Horizontal",
+    dragX: null,
+    dragY: null,
   };
 
   // When clicked on a square of the computers board
@@ -39,11 +42,43 @@ class Game extends Component {
     }, 1000);
   };
 
+  changeOrientation = () => {
+    if (this.state.orientation === "Horizontal") {
+      this.setState({ orientation: "Vertical" });
+    } else {
+      this.setState({ orientation: "Horizontal" });
+    }
+  };
+
+  handleDragStart = (event) => {
+    console.log(event.target);
+    console.log(event.currentTarget);
+    let ship = event.currentTarget;
+    ship.style.position = "absolute";
+    let shiftX = event.clientX - ship.getBoundingClientRect().left;
+    let shiftY = event.clientY - ship.getBoundingClientRect().top;
+    console.log(shiftX, shiftY);
+
+    document.addEventListener("mousemove", (event) => {
+      console.log(event.clientX);
+      console.log(event.pageX);
+      ship.style.left = event.pageX - 20 - shiftX + "px";
+      ship.style.top = event.pageY + 20 - shiftY + "px";
+    });
+  };
+
   render() {
     return (
       <DndProvider backend={HTML5Backend}>
         <div className={classes.Container}>
-          <Ships ships={this.state.human.gameboard.ships} />
+          <div>
+            <Ships
+              dragStart={this.handleDragStart}
+              orientation={this.state.orientation}
+              ships={this.state.human.gameboard.ships}
+            />
+            <button onClick={() => this.changeOrientation()}>Rotate</button>
+          </div>
           <div>
             <div className={classes.Label}>Human</div>
             <div className={classes.Grid}>
