@@ -14,6 +14,7 @@ class Game extends Component {
     computer: Player("Computer"),
     currentTurn: "Human",
     orientation: "Horizontal",
+    disableRotation: false,
     dragX: null,
     dragY: null,
   };
@@ -43,6 +44,9 @@ class Game extends Component {
   };
 
   changeOrientation = () => {
+    if (this.state.disableRotation === true) {
+      return;
+    }
     if (this.state.orientation === "Horizontal") {
       this.setState({ orientation: "Vertical" });
     } else {
@@ -50,21 +54,65 @@ class Game extends Component {
     }
   };
 
+  // Handles dragging of ship
   handleDragStart = (event) => {
+    // Stop rotation while dragging;
+    this.setState({ disableRotation: true });
     console.log(event.target);
     console.log(event.currentTarget);
     let ship = event.currentTarget;
-    ship.style.position = "absolute";
+
+    // console.log(event.pageX, event.pageY);
+    // console.log(event.clientX, event.clientY);
     let shiftX = event.clientX - ship.getBoundingClientRect().left;
     let shiftY = event.clientY - ship.getBoundingClientRect().top;
-    console.log(shiftX, shiftY);
+    // console.log(shiftX, shiftY);
 
-    document.addEventListener("mousemove", (event) => {
-      console.log(event.clientX);
-      console.log(event.pageX);
-      ship.style.left = event.pageX - 20 - shiftX + "px";
-      ship.style.top = event.pageY + 20 - shiftY + "px";
-    });
+    // Handle move of mouse with ship attached to it
+    let currentDroppable = null;
+    const onMouseMove = (event) => {
+      ship.style.position = "absolute";
+      ship.style.left = event.pageX - shiftX - 10 + "px";
+      ship.style.top = event.pageY - shiftY - 10 + "px";
+
+      ship.hidden = true;
+      let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
+      ship.hidden = false;
+      // Stop from being dropped outside window
+      if (!elemBelow) return;
+
+      // Find closest element marked droppable
+      //console.log(elemBelow);
+      let droppableBelow = elemBelow.closest("[drop=droppable]");
+
+      if (currentDroppable !== droppableBelow) {
+        if (currentDroppable) {
+          leaveDroppable(currentDroppable);
+        }
+        currentDroppable = droppableBelow;
+        if (currentDroppable) {
+          enterDroppable(currentDroppable);
+        }
+      }
+    };
+    document.addEventListener("mousemove", onMouseMove);
+
+    const leaveDroppable = (elem) => {
+      elem.style.background = "rgb(161, 202, 255)";
+    }
+
+    const enterDroppable = (elem) => {
+      elem.style.backgroundColor = "green";
+    }
+
+    const onMouseUp = (event) => {
+      document.removeEventListener("mousemove", onMouseMove);
+      this.setState({ disableRotation: false });
+      document.removeEventListener("mouseup", onMouseUp);
+      return;
+    }
+    // Handle letting go of mouse button
+    document.addEventListener("mouseup", onMouseUp);
   };
 
   render() {
@@ -77,7 +125,9 @@ class Game extends Component {
               orientation={this.state.orientation}
               ships={this.state.human.gameboard.ships}
             />
-            <button onClick={() => this.changeOrientation()}>Rotate</button>
+            {!this.state.disableRotation ? (
+              <button onClick={() => this.changeOrientation()}>Rotate</button>
+            ) : null}
           </div>
           <div>
             <div className={classes.Label}>Human</div>

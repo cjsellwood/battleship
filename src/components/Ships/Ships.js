@@ -12,18 +12,24 @@ const Ships = (props) => {
   // });
 
   const createShips = [];
-  props.ships.forEach((ship) => {
+  console.log(props.ships);
+  for (const ship in props.ships) {
+    console.log(ship);
     let squares = [];
-    for (let i = 0; i < ship.length; i++) {
+    for (let i = 0; i < props.ships[ship].length; i++) {
       squares.push(
-        <div name={ship.getName()} position={i} key={ship.getName() + i}></div>
+        <div
+          name={props.ships[ship].getName()}
+          position={i}
+          key={props.ships[ship].getName() + i}
+        ></div>
       );
     }
     createShips.push(
       <div
         onMouseDown={(event) => props.dragStart(event)}
         //draggable="true"
-        key={ship.getName()}
+        key={props.ships[ship].getName()}
         // ref={drag}
         // style={{
         //   opacity: isDragging ? 0.5 : 1,
@@ -32,20 +38,15 @@ const Ships = (props) => {
         {squares}
       </div>
     );
-  });
+  }
+
   let classList = [];
   if (props.orientation === "Vertical") {
     classList = [classes.Ships, classes.Vertical];
   } else {
     classList = [classes.Ships];
   }
-  return (
-    <div
-      className={classList.join(" ")}
-    >
-      {createShips}
-    </div>
-  );
+  return <div className={classList.join(" ")}>{createShips}</div>;
 };
 
 export default Ships;

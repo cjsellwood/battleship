@@ -13,7 +13,7 @@ const Ship = (name) => {
     case "Submarine":
       length = 3;
       break;
-    case "Patrol Boat":
+    case "PatrolBoat":
       length = 2;
       break;
     default:

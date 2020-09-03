@@ -1,13 +1,13 @@
 import Ship from "./Ship";
 
 const Gameboard = () => {
-  let ships = [
-    Ship("Carrier"),
-    Ship("Battleship"),
-    Ship("Destroyer"),
-    Ship("Submarine"),
-    Ship("Patrol Boat")
-  ]
+  let ships = {
+    Carrier: Ship("Carrier"),
+    Battleship: Ship("Battleship"),
+    Destroyer: Ship("Destroyer"),
+    Submarine: Ship("Submarine"),
+    PatrolBoat: Ship("PatrolBoat")
+  }
   // Create 10 x 10 grid
   let grid = [];
   for (let i = 0; i < 10; i++) {
