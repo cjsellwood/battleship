@@ -71,9 +71,10 @@ class Game extends Component {
     // Handle move of mouse with ship attached to it
     let currentDroppable = null;
     let shipName = event.target.getAttribute("name");
-    let position = event.target.getAttribute("position");
+    let position = Number(event.target.getAttribute("position"));
     let shipLength = this.state.human.gameboard.ships[shipName].getLength();
     const onMouseMove = (event) => {
+      ship.style.opacity = "0.7";
       ship.style.position = "absolute";
       ship.style.left = event.pageX - shiftX - 10 + "px";
       ship.style.top = event.pageY - shiftY - 10 + "px";
@@ -101,18 +102,68 @@ class Game extends Component {
     document.addEventListener("mousemove", onMouseMove);
 
     const leaveDroppable = (elem) => {
-      elem.style.background = "rgb(161, 202, 255)";
-    };
-
-    const enterDroppable = (elem) => {
-      const row = elem.getAttribute("row");
-      const column = elem.getAttribute("column");
+      const row = Number(elem.getAttribute("row"));
+      const column = Number(elem.getAttribute("column"));
+      const firstPiece = row - position;
       console.log("row", row);
       console.log("column", column);
-      console.log("ship-part", position);
+      console.log("position", position);
       console.log("ship name", shipName);
       console.log("ship length", shipLength);
-      elem.style.backgroundColor = "lightGray";
+      console.log("first piece", firstPiece);
+
+      // If ship extends over left or right side of board
+      if (firstPiece <= 0 || firstPiece + shipLength - 2 >= 10) {
+        return;
+      }
+
+      // Get list of elements that will be replaced with ship
+      const elements = [];
+      for (let i = firstPiece; i < firstPiece + shipLength; i++) {
+        elements.push(
+          document.querySelector(
+            `[drop="droppable"][row="${i}"][column="${column}"]`
+          )
+        );
+      }
+
+      console.log(elements);
+      elements.forEach((element) => {
+        element.style.backgroundColor = "rgb(161, 202, 255)";
+      });
+    };
+
+    // This happens if the element is droppable on
+    const enterDroppable = (elem) => {
+      const row = Number(elem.getAttribute("row"));
+      const column = Number(elem.getAttribute("column"));
+      const firstPiece = row - position;
+      console.log("row", row);
+      console.log("column", column);
+      console.log("position", position);
+      console.log("ship name", shipName);
+      console.log("ship length", shipLength);
+      console.log("first piece", firstPiece);
+
+      // If ship extends over left or right side of board
+      if (firstPiece <= 0 || firstPiece + shipLength - 2>= 10) {
+        return;
+      }
+
+      // Get list of elements that will be replaced with ship
+      const elements = [];
+      for (let i = firstPiece; i < firstPiece + shipLength; i++) {
+        elements.push(
+          document.querySelector(
+            `[drop="droppable"][row="${i}"][column="${column}"]`
+          )
+        );
+      }
+
+      console.log(elements);
+      elements.forEach((element) => {
+        element.style.backgroundColor = "lightGray";
+      });
     };
 
     // Handle letting go of mouse button
