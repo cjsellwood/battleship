@@ -12,9 +12,7 @@ const Ships = (props) => {
   // });
 
   const createShips = [];
-  console.log(props.ships);
   for (const ship in props.ships) {
-    console.log(ship);
     let squares = [];
     for (let i = 0; i < props.ships[ship].length; i++) {
       squares.push(

@@ -70,6 +70,9 @@ class Game extends Component {
 
     // Handle move of mouse with ship attached to it
     let currentDroppable = null;
+    let shipName = event.target.getAttribute("name");
+    let position = event.target.getAttribute("position");
+    let shipLength = this.state.human.gameboard.ships[shipName].getLength();
     const onMouseMove = (event) => {
       ship.style.position = "absolute";
       ship.style.left = event.pageX - shiftX - 10 + "px";
@@ -82,10 +85,10 @@ class Game extends Component {
       if (!elemBelow) return;
 
       // Find closest element marked droppable
-      //console.log(elemBelow);
       let droppableBelow = elemBelow.closest("[drop=droppable]");
 
       if (currentDroppable !== droppableBelow) {
+        // Make sure that ship can go in that position
         if (currentDroppable) {
           leaveDroppable(currentDroppable);
         }
@@ -99,19 +102,27 @@ class Game extends Component {
 
     const leaveDroppable = (elem) => {
       elem.style.background = "rgb(161, 202, 255)";
-    }
+    };
 
     const enterDroppable = (elem) => {
-      elem.style.backgroundColor = "green";
-    }
+      const row = elem.getAttribute("row");
+      const column = elem.getAttribute("column");
+      console.log("row", row);
+      console.log("column", column);
+      console.log("ship-part", position);
+      console.log("ship name", shipName);
+      console.log("ship length", shipLength);
+      elem.style.backgroundColor = "lightGray";
+    };
 
+    // Handle letting go of mouse button
     const onMouseUp = (event) => {
       document.removeEventListener("mousemove", onMouseMove);
       this.setState({ disableRotation: false });
       document.removeEventListener("mouseup", onMouseUp);
+      //ship.style.display = "none";
       return;
-    }
-    // Handle letting go of mouse button
+    };
     document.addEventListener("mouseup", onMouseUp);
   };
 
