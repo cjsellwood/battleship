@@ -9,15 +9,20 @@ class Game extends Component {
   state = {
     human: Player("Human"),
     computer: Player("Computer"),
-    currentTurn: "Human",
+    currentTurn: null,
     orientation: "Vertical",
     disableRotation: false,
-    dragX: null,
-    dragY: null,
+    startGame: false,
+    counter: 0,
   };
 
   // When clicked on a square of the computers board
   clickBoard = (event) => {
+    // Return if ships not placed
+    if (!this.state.currentTurn === null) {
+      return;
+    }
+
     // Only Allow when humans turn
     if (this.state.currentTurn !== "Human") {
       return;
@@ -51,9 +56,15 @@ class Game extends Component {
     }
   };
 
+  startGame = (event) => {
+    console.log(event)
+    console.log(event.target)
+    this.setState({currentTurn: "Human"});
+    event.target.textContent = this.state.currentTurn;
+  }
+
   // Handles dragging of ship
   handleDragStart = (event) => {
-    
     const horizontalDrag = () => {
       // Stop rotation while dragging;
       this.setState({ disableRotation: true });
@@ -201,13 +212,17 @@ class Game extends Component {
         document.removeEventListener("mousemove", onMouseMove);
         document.removeEventListener("mouseup", onMouseUp);
         if (canDrop) {
-          this.setState({ disableRotation: false });
+          let counter = this.state.counter + 1;
+          if (counter === 5) {
+            this.setState({startGame: true})
+          }
+          this.setState({ disableRotation: false, counter: counter });
           console.log(finalPosition.row, finalPosition.column);
           ship.style.display = "none";
           console.log(
             this.state.human.gameboard.placeShip(
               this.state.human.gameboard.ships[shipName],
-              "Horizontal",
+              this.state.orientation,
               finalPosition.column,
               finalPosition.row
             )
@@ -222,181 +237,196 @@ class Game extends Component {
       };
 
       document.addEventListener("mouseup", onMouseUp);
-    }
+    };
 
     const verticalDrag = () => {
-       // Stop rotation while dragging;
-       this.setState({ disableRotation: true });
-       console.log(event.target);
-       console.log(event.currentTarget);
-       let ship = event.currentTarget;
- 
-       let shiftX = event.clientX - ship.getBoundingClientRect().left;
-       let shiftY = event.clientY - ship.getBoundingClientRect().top;
- 
-       // Handle move of mouse with ship attached to it
-       let currentDroppable = null;
-       let shipName = event.target.getAttribute("name");
-       let position = Number(event.target.getAttribute("position"));
-       let shipLength = this.state.human.gameboard.ships[shipName].getLength();
-       let finalPosition = {
-         row: null,
-         column: null,
-       };
-       let canDrop = false;
-       let finalElements = [];
- 
-       const onMouseMove = (event) => {
-         ship.style.opacity = "0.7";
-         ship.style.position = "absolute";
-         ship.style.outline = "2px solid white";
-         ship.style.left = event.pageX - shiftX - 10 + "px";
-         ship.style.top = event.pageY - shiftY - 10 + "px";
- 
-         ship.hidden = true;
-         let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
-         ship.hidden = false;
-         // Stop from being dropped outside window
-         if (!elemBelow) return;
- 
-         // Find closest element marked droppable
-         let droppableBelow = elemBelow.closest("[drop=droppable]");
- 
-         if (currentDroppable !== droppableBelow) {
-           // Make sure that ship can go in that position
-           if (currentDroppable) {
-             leaveDroppable(currentDroppable);
-           }
-           currentDroppable = droppableBelow;
-           if (currentDroppable) {
-             enterDroppable(currentDroppable);
-           }
-         }
-       };
-       document.addEventListener("mousemove", onMouseMove);
- 
-       const leaveDroppable = (elem) => {
-         const row = Number(elem.getAttribute("row"));
-         const column = Number(elem.getAttribute("column"));
-         const firstPiece = row - position;
+      // Stop rotation while dragging;
+      this.setState({ disableRotation: true });
+      console.log(event.target);
+      console.log(event.currentTarget);
+      let ship = event.currentTarget;
+
+      let shiftX = event.clientX - ship.getBoundingClientRect().left;
+      let shiftY = -event.clientY - ship.getBoundingClientRect().top;
+
+      // - ship.getBoundingClientRect().right;
+      console.log("clientY", event.clientY);
+      console.log("left", ship.getBoundingClientRect().left);
+      console.log("right", ship.getBoundingClientRect().right);
+      console.log("top", ship.getBoundingClientRect().top);
+      console.log("bottom", ship.getBoundingClientRect().bottom);
+
+      // Handle move of mouse with ship attached to it
+      let currentDroppable = null;
+      let shipName = event.target.getAttribute("name");
+      let position = Number(event.target.getAttribute("position"));
+      let shipLength = this.state.human.gameboard.ships[shipName].getLength();
+      let finalPosition = {
+        row: null,
+        column: null,
+      };
+      let canDrop = false;
+      let finalElements = [];
+
+      const onMouseMove = (event) => {
+        ship.style.opacity = "0.7";
+        ship.style.position = "absolute";
+        ship.style.outline = "2px solid white";
+
+        ship.style.right = event.pageY + shiftY - 10 + "px";
+        //Good
+        //ship.style.top = event.pageX - shiftX - 28 + "px";
+
+        // console.log("pageY", -event.pageY)
+        ship.hidden = true;
+        let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
+        ship.hidden = false;
+        // Stop from being dropped outside window
+        if (!elemBelow) return;
+
+        // Find closest element marked droppable
+        let droppableBelow = elemBelow.closest("[drop=droppable]");
+
+        if (currentDroppable !== droppableBelow) {
+          // Make sure that ship can go in that position
+          if (currentDroppable) {
+            leaveDroppable(currentDroppable);
+          }
+          currentDroppable = droppableBelow;
+          if (currentDroppable) {
+            enterDroppable(currentDroppable);
+          }
+        }
+      };
+      document.addEventListener("mousemove", onMouseMove);
+
+      const leaveDroppable = (elem) => {
+        const row = Number(elem.getAttribute("row"));
+        const column = Number(elem.getAttribute("column"));
+        const firstPiece = row - position;
         //  console.log("row", row);
         //  console.log("column", column);
         //  console.log("position", position);
         //  console.log("ship name", shipName);
         //  console.log("ship length", shipLength);
         //  console.log("first piece", firstPiece);
- 
-         // If ship extends over left or right side of board
-         if (firstPiece <= 0 || firstPiece + shipLength - 2 >= 10) {
-           return;
-         }
- 
-         // Get list of elements that will be replaced with ship
-         const elements = [];
-         for (let i = firstPiece; i < firstPiece + shipLength; i++) {
-           elements.push(
-             document.querySelector(
-               `[drop="droppable"][row="${i}"][column="${column}"]`
-             )
-           );
-         }
- 
-         // If over a ship return
-         let exit = false;
-         elements.forEach((element) => {
-           if (element.style.backgroundColor === "gray") {
-             exit = true;
-           }
-         });
-         if (exit) return;
- 
-         elements.forEach((element) => {
-           element.style.backgroundColor = "rgb(161, 202, 255)";
-         });
-         canDrop = false;
-       };
- 
-       // This happens if the element is droppable on
-       const enterDroppable = (elem) => {
-         const row = Number(elem.getAttribute("row"));
-         const column = Number(elem.getAttribute("column"));
-         const firstPiece = row - position;
+
+        // If ship extends over left or right side of board
+        if (firstPiece <= 0 || firstPiece + shipLength - 2 >= 10) {
+          return;
+        }
+
+        // Get list of elements that will be replaced with ship
+        const elements = [];
+        for (let i = firstPiece; i < firstPiece + shipLength; i++) {
+          elements.push(
+            document.querySelector(
+              `[drop="droppable"][row="${i}"][column="${column}"]`
+            )
+          );
+        }
+
+        // If over a ship return
+        let exit = false;
+        elements.forEach((element) => {
+          if (element.style.backgroundColor === "gray") {
+            exit = true;
+          }
+        });
+        if (exit) return;
+
+        elements.forEach((element) => {
+          element.style.backgroundColor = "rgb(161, 202, 255)";
+        });
+        canDrop = false;
+      };
+
+      // This happens if the element is droppable on
+      const enterDroppable = (elem) => {
+        const row = Number(elem.getAttribute("row"));
+        const column = Number(elem.getAttribute("column"));
+        const firstPiece = row - position;
         //  console.log("row", row);
         //  console.log("column", column);
         //  console.log("position", position);
         //  console.log("ship name", shipName);
         //  console.log("ship length", shipLength);
         //  console.log("first piece", firstPiece);
- 
-         // If ship extends over left or right side of board
-         if (firstPiece <= 0 || firstPiece + shipLength - 2 >= 10) {
-           return;
-         }
- 
-         // Get list of elements that will be replaced with ship
-         const elements = [];
-         for (let i = firstPiece; i < firstPiece + shipLength; i++) {
-           elements.push(
-             document.querySelector(
-               `[drop="droppable"][row="${i}"][column="${column}"]`
-             )
-           );
-         }
- 
-         // If over a ship return
-         let exit = false;
-         elements.forEach((element) => {
-           if (element.style.backgroundColor === "gray") {
-             exit = true;
-           }
-         });
-         if (exit) return;
- 
-         // Change colour on hover
-         elements.forEach((element) => {
-           element.style.backgroundColor = "lightGray";
-         });
- 
-         // Record where it would be dropped right now
-         canDrop = true;
-         finalElements = elements;
-         finalPosition.row = firstPiece;
-         finalPosition.column = column;
-       };
- 
-       // Handle letting go of mouse button
-       const onMouseUp = (event) => {
-         document.removeEventListener("mousemove", onMouseMove);
-         document.removeEventListener("mouseup", onMouseUp);
-         if (canDrop) {
-           this.setState({ disableRotation: false });
-           console.log(finalPosition.row, finalPosition.column);
-           ship.style.display = "none";
-           console.log(
-             this.state.human.gameboard.placeShip(
-               this.state.human.gameboard.ships[shipName],
-               "Horizontal",
-               finalPosition.column,
-               finalPosition.row
-             )
-           );
-           console.log(finalElements);
-           finalElements.forEach((element) => {
-             element.style.backgroundColor = "gray";
-           });
-         }
-         //console.log(this.state.human.gameboard.getGrid())
-         return;
-       };
- 
-       document.addEventListener("mouseup", onMouseUp);
-    }
+
+        // If ship extends over left or right side of board
+        if (firstPiece <= 0 || firstPiece + shipLength - 2 >= 10) {
+          return;
+        }
+
+        // Get list of elements that will be replaced with ship
+        const elements = [];
+        for (let i = firstPiece; i < firstPiece + shipLength; i++) {
+          elements.push(
+            document.querySelector(
+              `[drop="droppable"][row="${i}"][column="${column}"]`
+            )
+          );
+        }
+
+        // If over a ship return
+        let exit = false;
+        elements.forEach((element) => {
+          if (element.style.backgroundColor === "gray") {
+            exit = true;
+          }
+        });
+        if (exit) return;
+
+        // Change colour on hover
+        elements.forEach((element) => {
+          element.style.backgroundColor = "lightGray";
+        });
+
+        // Record where it would be dropped right now
+        canDrop = true;
+        finalElements = elements;
+        finalPosition.row = firstPiece;
+        finalPosition.column = column;
+      };
+
+      // Handle letting go of mouse button
+      const onMouseUp = (event) => {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+        if (canDrop) {
+          let counter = this.state.counter + 1;
+          if (counter === 5) {
+            this.setState({startGame: true})
+          }
+          this.setState({ disableRotation: false, counter: counter });
+          console.log(finalPosition.row, finalPosition.column);
+          ship.style.display = "none";
+          this.state.human.gameboard.placeShip(
+            this.state.human.gameboard.ships[shipName],
+            this.state.orientation,
+            finalPosition.column,
+            finalPosition.row
+          )
+          console.log(finalElements);
+          finalElements.forEach((element) => {
+            element.style.backgroundColor = "gray";
+          });
+
+        }
+        //console.log(this.state.human.gameboard.getGrid())
+        return;
+      };
+
+      document.addEventListener("mouseup", onMouseUp);
+    };
 
     if (this.state.orientation === "Horizontal") {
       horizontalDrag();
     } else {
       verticalDrag();
     }
+
+
   };
 
   render() {
@@ -412,7 +442,9 @@ class Game extends Component {
             <div className={classes.Buttons}>
               {!this.state.disableRotation ? (
                 <React.Fragment>
-                  <button onClick={() => this.changeOrientation()}>Rotate</button>
+                  <button onClick={() => this.changeOrientation()}>
+                    Rotate
+                  </button>
                   <button>Auto Place</button>
                 </React.Fragment>
               ) : null}
@@ -434,7 +466,11 @@ class Game extends Component {
             </div>
           </div>
         </div>
-        <div className={classes.Turn}>Go: {this.state.currentTurn}</div>
+        <div className={classes.Turn}>
+          {
+            this.state.startGame ? <button onClick={(event) => this.startGame(event)}>Start Game</button> : null
+          }
+        </div>
       </React.Fragment>
     );
   }

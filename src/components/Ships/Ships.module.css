@@ -14,7 +14,8 @@
 
 .Ships > div > div {
   width: 3vw;
-  margin: 0px max(0.1vw, 1px);
+  /* padding: 0px max(0.1vw, 1px); */
+  border: 1px solid white;
   height: 3vw;
   background-color: gray;
   display: inline-block;
