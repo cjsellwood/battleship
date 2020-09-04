@@ -1,6 +1,6 @@
 .Container {
   display: flex;
-  height: 700px;
+  height: 35vw;
   align-items: center;
 }
 
@@ -8,20 +8,43 @@
   display: grid;
   grid-template-rows: repeat(10, 3vw);
   grid-template-columns: repeat(10, 3vw);
-  grid-column-gap: 1px;
-  margin: 20px;
+  grid-column-gap: max(0.1vw, 1px);
+  margin: 1vw;
 }
 
 .Turn {
-  height: 100px;
+  height: 6vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2em;
+  font-size: 1.8vw;
 }
 
 .Label {
   text-align: center;
+  font-size: 1.2vw;
+}
+
+.Buttons {
+  display: flex;
+  justify-content: center;
+  height: 5vw;
+}
+
+.Buttons > button {
+  width: 41%;
+  border: none;
+  font-size: 1.2vw;
+  outline: none;
+  height: 5vw;
+  margin: 0.1vw;
+  background-color: rgb(212, 212, 212);
+  color: rgb(0, 0, 0);
+}
+
+.Buttons > button:hover {
+  background-color: rgb(187, 187, 187);
+  cursor: pointer;
 }
 
 @media only screen and (max-width: 600px) {
@@ -29,21 +52,6 @@
     flex-wrap: wrap;
     height: auto;
     flex-direction: column;
-  }
-
-  .Ships {
-    width: 90vw;
-    height: 90vw;
-    margin: auto;
-  }
-  
-  .Ships > div {
-    height: 14vw;
-  }
-  
-  .Ships > div > div {
-    width: 9vw;
-    height: 9vw;
   }
 
   .Grid {
