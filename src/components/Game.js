@@ -57,11 +57,11 @@ class Game extends Component {
   };
 
   startGame = (event) => {
-    console.log(event)
-    console.log(event.target)
-    this.setState({currentTurn: "Human"});
+    console.log(event);
+    console.log(event.target);
+    this.setState({ currentTurn: "Human" });
     event.target.textContent = this.state.currentTurn;
-  }
+  };
 
   // Handles dragging of ship
   handleDragStart = (event) => {
@@ -86,13 +86,14 @@ class Game extends Component {
       };
       let canDrop = false;
       let finalElements = [];
+      //console.log(window.innerHeight, window.innerWidth);
 
       const onMouseMove = (event) => {
         ship.style.opacity = "0.7";
         ship.style.position = "absolute";
         ship.style.outline = "2px solid white";
-        ship.style.left = event.pageX - shiftX - 10 + "px";
-        ship.style.top = event.pageY - shiftY - 10 + "px";
+        ship.style.left = event.pageX - shiftX - 0.01 * window.innerWidth - 1 + "px";
+        ship.style.top = event.pageY - shiftY - 0.01 * window.innerWidth - 1 + "px";
 
         ship.hidden = true;
         let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
@@ -214,7 +215,7 @@ class Game extends Component {
         if (canDrop) {
           let counter = this.state.counter + 1;
           if (counter === 5) {
-            this.setState({startGame: true})
+            this.setState({ startGame: true });
           }
           this.setState({ disableRotation: false, counter: counter });
           console.log(finalPosition.row, finalPosition.column);
@@ -273,7 +274,7 @@ class Game extends Component {
         ship.style.position = "absolute";
         ship.style.outline = "2px solid white";
 
-        ship.style.right = event.pageY + shiftY - 10 + "px";
+        //ship.style.right = event.pageY + shiftY - 10 + "px";
         //Good
         //ship.style.top = event.pageX - shiftX - 28 + "px";
 
@@ -396,7 +397,7 @@ class Game extends Component {
         if (canDrop) {
           let counter = this.state.counter + 1;
           if (counter === 5) {
-            this.setState({startGame: true})
+            this.setState({ startGame: true });
           }
           this.setState({ disableRotation: false, counter: counter });
           console.log(finalPosition.row, finalPosition.column);
@@ -406,12 +407,11 @@ class Game extends Component {
             this.state.orientation,
             finalPosition.column,
             finalPosition.row
-          )
+          );
           console.log(finalElements);
           finalElements.forEach((element) => {
             element.style.backgroundColor = "gray";
           });
-
         }
         //console.log(this.state.human.gameboard.getGrid())
         return;
@@ -425,8 +425,6 @@ class Game extends Component {
     } else {
       verticalDrag();
     }
-
-
   };
 
   render() {
@@ -467,9 +465,11 @@ class Game extends Component {
           </div>
         </div>
         <div className={classes.Turn}>
-          {
-            this.state.startGame ? <button onClick={(event) => this.startGame(event)}>Start Game</button> : null
-          }
+          {this.state.startGame ? (
+            <button onClick={(event) => this.startGame(event)}>
+              Start Game
+            </button>
+          ) : null}
         </div>
       </React.Fragment>
     );
