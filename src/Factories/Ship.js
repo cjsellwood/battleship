@@ -21,7 +21,12 @@ const Ship = (name) => {
   }
   let damage = Array(length).fill("");
   let sunk = false;
+  let placed = false;
 
+  const getPlaced = () => placed;
+  const setPlaced = () => {
+    placed = true;
+  } 
   const getName = () => name;
   const getLength = () => length;
   const getDamage = () => damage;
@@ -44,11 +49,14 @@ const Ship = (name) => {
     damage,
     sunk,
     length,
+    placed,
     getLength,
     getName,
     getDamage,
     hit,
     isSunk,
+    getPlaced,
+    setPlaced,
   };
 };
 

@@ -31,6 +31,21 @@ const Gameboard = () => {
 
   };
 
+  const autoPlaceShips = () => {
+    console.log(ships);
+    console.log(grid);
+    for (const ship in ships) {
+      console.log(ships[ship])
+      if (!ships[ship].getPlaced()) {
+        let orientation = Math.random() > 0.5 ? "Horizontal" : "Vertical";
+        let row = Math.floor(Math.random() * 10) + 1;
+        let column = Math.floor(Math.random() * 10) + 1;
+        placeShip(ships[ship], orientation, row, column)
+        ships[ship].setPlaced();
+      }
+    }
+  }
+
   const receiveAttack = (row, column) => {
     if (grid[row - 1][column - 1] === "") {
       // Set as missed
@@ -77,6 +92,7 @@ const Gameboard = () => {
     placeShip,
     receiveAttack,
     allSunk,
+    autoPlaceShips,
   };
 };
 

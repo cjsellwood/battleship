@@ -18,12 +18,7 @@ class Game extends Component {
 
   // When clicked on a square of the computers board
   clickBoard = (event) => {
-    // Return if ships not placed
-    if (!this.state.currentTurn === null) {
-      return;
-    }
-
-    // Only Allow when humans turn
+    // Only Allow when humans turn and ships have been placed
     if (this.state.currentTurn !== "Human") {
       return;
     }
@@ -59,11 +54,16 @@ class Game extends Component {
   startGame = (event) => {
     console.log(event);
     console.log(event.target);
-    this.setState({ currentTurn: "Human" });
-    event.target.textContent = this.state.currentTurn;
+    this.setState({ currentTurn: "Human", disableRotation: true, startGame: false });
+    event.target.disabled = true;
   };
 
-  // Handles dragging of ship
+  autoPlace = () => {
+    console.log("Autoplace");
+    this.state.human.gameboard.autoPlaceShips();
+  }
+
+  // Handles dragging of a ship
   handleDragStart = (event) => {
     const horizontalDrag = () => {
       // Stop rotation while dragging;
@@ -92,8 +92,10 @@ class Game extends Component {
         ship.style.opacity = "0.7";
         ship.style.position = "absolute";
         ship.style.outline = "2px solid white";
-        ship.style.left = event.pageX - shiftX - 0.01 * window.innerWidth - 1 + "px";
-        ship.style.top = event.pageY - shiftY - 0.01 * window.innerWidth - 1 + "px";
+        ship.style.left =
+          event.pageX - shiftX - 0.01 * window.innerWidth - 1 + "px";
+        ship.style.top =
+          event.pageY - shiftY - 0.01 * window.innerWidth - 1 + "px";
 
         ship.hidden = true;
         let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
@@ -232,6 +234,12 @@ class Game extends Component {
           finalElements.forEach((element) => {
             element.style.backgroundColor = "gray";
           });
+
+        // If not dropped on board reset to previous position
+        } else {
+          ship.style.position = "static";
+          ship.style.opacity = 1;
+          this.setState({ disableRotation: false });
         }
         //console.log(this.state.human.gameboard.getGrid())
         return;
@@ -248,14 +256,7 @@ class Game extends Component {
       let ship = event.currentTarget;
 
       let shiftX = event.clientX - ship.getBoundingClientRect().left;
-      let shiftY = -event.clientY - ship.getBoundingClientRect().top;
-
-      // - ship.getBoundingClientRect().right;
-      console.log("clientY", event.clientY);
-      console.log("left", ship.getBoundingClientRect().left);
-      console.log("right", ship.getBoundingClientRect().right);
-      console.log("top", ship.getBoundingClientRect().top);
-      console.log("bottom", ship.getBoundingClientRect().bottom);
+      let shiftY = event.clientY - ship.getBoundingClientRect().top;
 
       // Handle move of mouse with ship attached to it
       let currentDroppable = null;
@@ -274,9 +275,14 @@ class Game extends Component {
         ship.style.position = "absolute";
         ship.style.outline = "2px solid white";
 
-        //ship.style.right = event.pageY + shiftY - 10 + "px";
+        // Actually up and down due to rotation
+        ship.style.bottom =
+          event.pageX - shiftX - 0.01 * window.innerWidth - 1 + "px";
+        ship.style.right =
+          event.pageY - shiftY - 0.01 * window.innerWidth - 1 + "px";
+
         //Good
-        //ship.style.top = event.pageX - shiftX - 28 + "px";
+        //ship.style.top = event.pageX - shiftX - 0.01 * window.innerWidth - 1 + "px";
 
         // console.log("pageY", -event.pageY)
         ship.hidden = true;
@@ -412,6 +418,11 @@ class Game extends Component {
           finalElements.forEach((element) => {
             element.style.backgroundColor = "gray";
           });
+        // If not dropped on board reset to previous position
+        } else {
+          ship.style.position = "static";
+          ship.style.opacity = 1;
+          this.setState({ disableRotation: false });
         }
         //console.log(this.state.human.gameboard.getGrid())
         return;
@@ -428,6 +439,17 @@ class Game extends Component {
   };
 
   render() {
+    let turnIndicator = null;
+
+    if (this.state.startGame) {
+      turnIndicator = (
+        <button onClick={(event) => this.startGame(event)}>
+        Start Game
+      </button>
+      )
+    } else if (this.state.currentTurn) {
+      turnIndicator = <button>Go: {this.state.currentTurn}</button>;
+    }
     return (
       <React.Fragment>
         <div className={classes.Container}>
@@ -443,7 +465,7 @@ class Game extends Component {
                   <button onClick={() => this.changeOrientation()}>
                     Rotate
                   </button>
-                  <button>Auto Place</button>
+                  <button onClick={() => this.autoPlace()}>Auto Place</button>
                 </React.Fragment>
               ) : null}
             </div>
@@ -464,12 +486,10 @@ class Game extends Component {
             </div>
           </div>
         </div>
-        <div className={classes.Turn}>
-          {this.state.startGame ? (
-            <button onClick={(event) => this.startGame(event)}>
-              Start Game
-            </button>
-          ) : null}
+        <div
+          className={classes.Turn}
+        >
+          {turnIndicator}
         </div>
       </React.Fragment>
     );
