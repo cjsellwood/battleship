@@ -14,7 +14,9 @@ const computerGrid = (props) => {
               key={`${index} ${index2}`}
               className={classes.Column}
             >
-              {props.grid[index][index2]}
+                {props.grid[index][index2] === "x"
+                  ? props.grid[index][index2]
+                  : null}
             </div>
           );
         })}

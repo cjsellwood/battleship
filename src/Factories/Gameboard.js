@@ -17,12 +17,39 @@ const Gameboard = () => {
 
   // Place ship in grid
   const placeShip = (shipObj, orientation, row, column) => {
+    if (!orientation) return false;
     if (orientation === "Horizontal") {
+      for (let i = 0; i < shipObj.length; i++) {
+        // If going to go off board 
+        if (column - 1 + i >= 10 || row - 1 + i < 0) {
+          return false;
+        }
+
+        // If going to overlap another ship
+        if (grid[row - 1][column - 1 + i] !== "") {
+          return false;
+        }
+      }
       for (let i = 0; i < shipObj.length; i++) {
         grid[row - 1][column - 1 + i] = shipObj.getName() + i;
       }
       return grid;
     } else {
+      for (let i = 0; i < shipObj.length; i++) {
+        console.log("coordinates", row, column)
+        console.log("setToRow", row - 1 + i)
+        console.log("shipObj", shipObj);
+
+        // If going to go off board 
+        if (row - 1 + i >= 10 || row - 1 + i < 0) {
+          return false;
+        }
+
+        // If going to overlap another ship
+        if (grid[row - 1 + i][column - 1] !== "") {
+          return false;
+        }
+      }
       for (let i = 0; i < shipObj.length; i++) {
         grid[row - 1 + i][column - 1] = shipObj.getName() + i;
       }
@@ -32,18 +59,20 @@ const Gameboard = () => {
   };
 
   const autoPlaceShips = () => {
-    console.log(ships);
-    console.log(grid);
     for (const ship in ships) {
       console.log(ships[ship])
       if (!ships[ship].getPlaced()) {
-        let orientation = Math.random() > 0.5 ? "Horizontal" : "Vertical";
-        let row = Math.floor(Math.random() * 10) + 1;
-        let column = Math.floor(Math.random() * 10) + 1;
-        placeShip(ships[ship], orientation, row, column)
-        ships[ship].setPlaced();
+        let orientation, row, column = null;
+        while (!placeShip(ships[ship], orientation, row, column)) {
+          orientation = Math.random() > 0.5 ? "Horizontal" : "Vertical";
+          row = Math.floor(Math.random() * 10) + 1;
+          column = Math.floor(Math.random() * 10) + 1;
+        }
+        // placeShip(ships[ship], orientation, row, column)
+        ships[ship].setPlaced();        
       }
     }
+    console.log(grid);
   }
 
   const receiveAttack = (row, column) => {

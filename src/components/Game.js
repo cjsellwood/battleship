@@ -14,6 +14,7 @@ class Game extends Component {
     disableRotation: false,
     startGame: false,
     counter: 0,
+    disableStartBtn: false,
   };
 
   // When clicked on a square of the computers board
@@ -26,7 +27,7 @@ class Game extends Component {
     if (event.target.textContent === "x") {
       return;
     }
-    console.log(event);
+    //console.log(event);
     let newComputer = this.state.computer;
     const row = event.target.getAttribute("row");
     const column = event.target.getAttribute("column");
@@ -51,17 +52,27 @@ class Game extends Component {
     }
   };
 
-  startGame = (event) => {
-    console.log(event);
-    console.log(event.target);
-    this.setState({ currentTurn: "Human", disableRotation: true, startGame: false });
-    event.target.disabled = true;
+  startGame = () => {
+    this.setState({
+      currentTurn: "Human",
+      disableRotation: true,
+      startGame: false,
+      disableStartBtn: true,
+    });
+    // Auto place computer ships
+    this.state.computer.gameboard.autoPlaceShips();
   };
 
   autoPlace = () => {
-    console.log("Autoplace");
+    console.log("Auto place");
     this.state.human.gameboard.autoPlaceShips();
-  }
+    console.log(this.state.human.gameboard.getGrid());
+
+    // Stop display of draggable ships if auto placed
+    let newHuman = this.state.human;
+    newHuman.gameboard.ships = null; 
+    this.setState({ startGame: true, human: newHuman, disableRotation: true });
+  };
 
   // Handles dragging of a ship
   handleDragStart = (event) => {
@@ -222,20 +233,24 @@ class Game extends Component {
           this.setState({ disableRotation: false, counter: counter });
           console.log(finalPosition.row, finalPosition.column);
           ship.style.display = "none";
-          console.log(
-            this.state.human.gameboard.placeShip(
-              this.state.human.gameboard.ships[shipName],
-              this.state.orientation,
-              finalPosition.column,
-              finalPosition.row
-            )
+          this.state.human.gameboard.placeShip(
+            this.state.human.gameboard.ships[shipName],
+            this.state.orientation,
+            finalPosition.column,
+            finalPosition.row
           );
+
+          // Set ship as placed 
+          let newHuman = this.state.human;
+          newHuman.gameboard.ships[shipName].setPlaced();
+          this.setState({human: newHuman})
+
           console.log(finalElements);
           finalElements.forEach((element) => {
             element.style.backgroundColor = "gray";
           });
 
-        // If not dropped on board reset to previous position
+          // If not dropped on board reset to previous position
         } else {
           ship.style.position = "static";
           ship.style.opacity = 1;
@@ -418,7 +433,7 @@ class Game extends Component {
           finalElements.forEach((element) => {
             element.style.backgroundColor = "gray";
           });
-        // If not dropped on board reset to previous position
+          // If not dropped on board reset to previous position
         } else {
           ship.style.position = "static";
           ship.style.opacity = 1;
@@ -443,12 +458,10 @@ class Game extends Component {
 
     if (this.state.startGame) {
       turnIndicator = (
-        <button onClick={(event) => this.startGame(event)}>
-        Start Game
-      </button>
-      )
+        <button onClick={() => this.startGame()}>Start Game</button>
+      );
     } else if (this.state.currentTurn) {
-      turnIndicator = <button>Go: {this.state.currentTurn}</button>;
+      turnIndicator = <button disabled>Go: {this.state.currentTurn}</button>;
     }
     return (
       <React.Fragment>
@@ -486,11 +499,7 @@ class Game extends Component {
             </div>
           </div>
         </div>
-        <div
-          className={classes.Turn}
-        >
-          {turnIndicator}
-        </div>
+        <div className={classes.Turn}>{turnIndicator}</div>
       </React.Fragment>
     );
   }

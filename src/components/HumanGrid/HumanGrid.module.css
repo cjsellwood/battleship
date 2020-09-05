@@ -15,6 +15,10 @@
   background-color: rgb(161, 202, 255);
 }
 
+.ShipGray {
+  background-color: gray;
+}
+
 @media only screen and (max-width: 600px) {
   .Row{
     width: 9vw;
