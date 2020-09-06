@@ -61,16 +61,16 @@ class Game extends Component {
     });
     // Auto place computer ships
     this.state.computer.gameboard.autoPlaceShips();
+    console.log("human grid", this.state.human.gameboard.getGrid());
+    console.log("computer grid", this.state.computer.gameboard.getGrid());
   };
 
   autoPlace = () => {
-    console.log("Auto place");
     this.state.human.gameboard.autoPlaceShips();
-    console.log(this.state.human.gameboard.getGrid());
 
     // Stop display of draggable ships if auto placed
     let newHuman = this.state.human;
-    newHuman.gameboard.ships = null; 
+    newHuman.gameboard.ships = null;
     this.setState({ startGame: true, human: newHuman, disableRotation: true });
   };
 
@@ -134,12 +134,12 @@ class Game extends Component {
         const row = Number(elem.getAttribute("row"));
         const column = Number(elem.getAttribute("column"));
         const firstPiece = row - position;
-        console.log("row", row);
-        console.log("column", column);
-        console.log("position", position);
-        console.log("ship name", shipName);
-        console.log("ship length", shipLength);
-        console.log("first piece", firstPiece);
+        // console.log("row", row);
+        // console.log("column", column);
+        // console.log("position", position);
+        // console.log("ship name", shipName);
+        // console.log("ship length", shipLength);
+        // console.log("first piece", firstPiece);
 
         // If ship extends over left or right side of board
         if (firstPiece <= 0 || firstPiece + shipLength - 2 >= 10) {
@@ -159,7 +159,6 @@ class Game extends Component {
         // If over a ship return
         let exit = false;
         elements.forEach((element) => {
-          console.log(element.style.backgroundColor);
           if (element.style.backgroundColor === "gray") {
             exit = true;
           }
@@ -167,6 +166,7 @@ class Game extends Component {
         if (exit) return;
 
         elements.forEach((element) => {
+          console.log("Change to blue")
           element.style.backgroundColor = "rgb(161, 202, 255)";
         });
         canDrop = false;
@@ -177,12 +177,12 @@ class Game extends Component {
         const row = Number(elem.getAttribute("row"));
         const column = Number(elem.getAttribute("column"));
         const firstPiece = row - position;
-        console.log("row", row);
-        console.log("column", column);
-        console.log("position", position);
-        console.log("ship name", shipName);
-        console.log("ship length", shipLength);
-        console.log("first piece", firstPiece);
+        // console.log("row", row);
+        // console.log("column", column);
+        // console.log("position", position);
+        // console.log("ship name", shipName);
+        // console.log("ship length", shipLength);
+        // console.log("first piece", firstPiece);
 
         // If ship extends over left or right side of board
         if (firstPiece <= 0 || firstPiece + shipLength - 2 >= 10) {
@@ -202,7 +202,6 @@ class Game extends Component {
         // If over a ship return
         let exit = false;
         elements.forEach((element) => {
-          console.log(element.style.backgroundColor);
           if (element.style.backgroundColor === "gray") {
             exit = true;
           }
@@ -231,7 +230,7 @@ class Game extends Component {
             this.setState({ startGame: true });
           }
           this.setState({ disableRotation: false, counter: counter });
-          console.log(finalPosition.row, finalPosition.column);
+          //console.log(finalPosition.row, finalPosition.column);
           ship.style.display = "none";
           this.state.human.gameboard.placeShip(
             this.state.human.gameboard.ships[shipName],
@@ -239,11 +238,12 @@ class Game extends Component {
             finalPosition.column,
             finalPosition.row
           );
+          console.log(this.state.human.gameboard.getGrid())
 
-          // Set ship as placed 
+          // Set ship as placed
           let newHuman = this.state.human;
           newHuman.gameboard.ships[shipName].setPlaced();
-          this.setState({human: newHuman})
+          this.setState({ human: newHuman });
 
           console.log(finalElements);
           finalElements.forEach((element) => {

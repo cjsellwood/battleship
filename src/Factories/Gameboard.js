@@ -36,10 +36,6 @@ const Gameboard = () => {
       return grid;
     } else {
       for (let i = 0; i < shipObj.length; i++) {
-        console.log("coordinates", row, column)
-        console.log("setToRow", row - 1 + i)
-        console.log("shipObj", shipObj);
-
         // If going to go off board 
         if (row - 1 + i >= 10 || row - 1 + i < 0) {
           return false;
@@ -60,7 +56,6 @@ const Gameboard = () => {
 
   const autoPlaceShips = () => {
     for (const ship in ships) {
-      console.log(ships[ship])
       if (!ships[ship].getPlaced()) {
         let orientation, row, column = null;
         while (!placeShip(ships[ship], orientation, row, column)) {
@@ -72,7 +67,6 @@ const Gameboard = () => {
         ships[ship].setPlaced();        
       }
     }
-    console.log(grid);
   }
 
   const receiveAttack = (row, column) => {

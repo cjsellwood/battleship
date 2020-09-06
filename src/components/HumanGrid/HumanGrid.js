@@ -7,11 +7,14 @@ const humanGrid = (props) => {
       <div key={rowIndex + 1} className={classes.Row}>
         {row.map((column, colIndex) => {
           let classList = [classes.Column];
+          let style = null;
           if (
             props.grid[colIndex][rowIndex] !== "x" &&
             props.grid[colIndex][rowIndex] !== ""
           ) {
             classList.push(classes.ShipGray)
+            // Style changes color if dragging was used before auto place
+            style = {backgroundColor: "gray"};
           }
 
             return (
@@ -20,6 +23,7 @@ const humanGrid = (props) => {
                 column={colIndex + 1}
                 key={`${rowIndex} ${colIndex}`}
                 className={classList.join(" ")}
+                style={style}
                 drop="droppable"
               >
                 {props.grid[colIndex][rowIndex] === "x"
