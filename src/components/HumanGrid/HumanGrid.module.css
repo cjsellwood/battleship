@@ -19,6 +19,7 @@
   background-color: gray;
 }
 
+
 @media only screen and (max-width: 600px) {
   .Row{
     width: 9vw;

@@ -86,7 +86,7 @@ const Gameboard = () => {
       ship.hit(hitPosition)
 
       // Mark as hit
-      grid[row - 1][column - 1] = "x";
+      grid[row - 1][column - 1] = "Hit";
       return true;
     }
   };
@@ -95,7 +95,7 @@ const Gameboard = () => {
     let sunk = true;
     grid.forEach((row) => {
       row.forEach((column) => {
-        if (column !== "" && column !== "x") {
+        if (column !== "" && column !== "x" && column !== "Hit") {
           sunk = false;
         }
       })

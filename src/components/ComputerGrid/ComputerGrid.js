@@ -1,22 +1,33 @@
 import React from "react";
 import classes from "./ComputerGrid.module.css";
+import Fire from "../../images/fire.png";
 
 const computerGrid = (props) => {
-  return props.grid.map((row, index) => {
+  return props.grid.map((row, rowIndex) => {
     return (
-      <div key={index + 1} className={classes.Row}>
-        {row.map((column, index2) => {
+      <div key={rowIndex + 1} className={classes.Row}>
+        {row.map((column, colIndex) => {
+          let classList = [classes.Column];
+          let style = null;
+          if (props.grid[rowIndex][colIndex] === "Hit") {
+            style = {
+              backgroundColor: "black",
+              backgroundImage: `url(${Fire})`,
+              backgroundSize: "cover",
+            };
+          }
           return (
             <div
               onClick={(event) => props.clickBoard(event)}
-              row={index + 1}
-              column={index2 + 1}
-              key={`${index} ${index2}`}
-              className={classes.Column}
+              row={rowIndex + 1}
+              column={colIndex + 1}
+              key={`${rowIndex} ${colIndex}`}
+              className={classList.join(" ")}
+              style={style}
             >
-                {props.grid[index][index2] === "x"
-                  ? props.grid[index][index2]
-                  : null}
+              {props.grid[rowIndex][colIndex] === "x"
+                ? props.grid[rowIndex][colIndex]
+                : null}
             </div>
           );
         })}
