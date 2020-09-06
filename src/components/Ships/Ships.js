@@ -40,7 +40,7 @@ const Ships = (props) => {
 
   let classList = [];
   if (props.orientation === "Vertical") {
-    classList = [classes.Ships, classes.Vertical];
+    classList = [classes.VerticalShips];
   } else {
     classList = [classes.Ships];
   }

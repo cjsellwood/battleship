@@ -10,7 +10,7 @@ class Game extends Component {
     human: Player("Human"),
     computer: Player("Computer"),
     currentTurn: null,
-    orientation: "Vertical",
+    orientation: "Horizontal",
     disableRotation: false,
     startGame: false,
     counter: 0,
@@ -31,7 +31,7 @@ class Game extends Component {
     ) {
       return;
     }
-    //console.log(event);
+    // Attack computer board
     let newComputer = this.state.computer;
     const row = event.target.getAttribute("row");
     const column = event.target.getAttribute("column");
@@ -41,7 +41,6 @@ class Game extends Component {
     // If all computer ships sunk, declare human winner
     if (newComputer.gameboard.allSunk()) {
       this.setState({ winner: "Human" });
-      console.log("Human Wins");
     }
     // Computer attack after 1 second delay
     setTimeout(() => {
@@ -51,15 +50,15 @@ class Game extends Component {
       // If all human ships sunk, declare computer winner
       if (newHuman.gameboard.allSunk()) {
         this.setState({ winner: "Computer" });
-        console.log("Computer Wins");
       }
     }, 1000);
   };
 
+  // Change orientation of ships box
   changeOrientation = () => {
-    if (this.state.disableRotation === true) {
-      return;
-    }
+    // if (this.state.disableRotation === true) {
+    //   return;
+    // }
     if (this.state.orientation === "Horizontal") {
       this.setState({ orientation: "Vertical" });
     } else {
@@ -67,6 +66,7 @@ class Game extends Component {
     }
   };
 
+  // When pressing start game button
   startGame = () => {
     this.setState({
       currentTurn: "Human",
@@ -76,10 +76,11 @@ class Game extends Component {
     });
     // Auto place computer ships
     this.state.computer.gameboard.autoPlaceShips();
-    console.log("human grid", this.state.human.gameboard.getGrid());
-    console.log("computer grid", this.state.computer.gameboard.getGrid());
+    // console.log("human grid", this.state.human.gameboard.getGrid());
+    // console.log("computer grid", this.state.computer.gameboard.getGrid());
   };
 
+  // When pressing auto place button
   autoPlace = () => {
     this.state.human.gameboard.autoPlaceShips();
 
@@ -97,9 +98,15 @@ class Game extends Component {
       console.log(event.target);
       console.log(event.currentTarget);
       let ship = event.currentTarget;
+      console.log(event.clientX);
+      console.log(event.clientY);
+      console.log(ship.getBoundingClientRect());
 
+      // Shift the position of mouse pointer over ship to spot clicked
       let shiftX = event.clientX - ship.getBoundingClientRect().left;
+      shiftX += 0.005 * window.innerWidth;
       let shiftY = event.clientY - ship.getBoundingClientRect().top;
+      shiftY += 0.005 * window.innerWidth;
 
       // Handle move of mouse with ship attached to it
       let currentDroppable = null;
@@ -117,11 +124,10 @@ class Game extends Component {
       const onMouseMove = (event) => {
         ship.style.opacity = "0.7";
         ship.style.position = "absolute";
-        ship.style.outline = "2px solid white";
-        ship.style.left =
-          event.pageX - shiftX - 0.01 * window.innerWidth - 1 + "px";
-        ship.style.top =
-          event.pageY - shiftY - 0.01 * window.innerWidth - 1 + "px";
+        // ship.style.outline = "2px solid white";
+        ship.style.left = event.pageX - shiftX + "px";
+        ship.style.top = event.pageY - shiftY + "px";
+        console.log(event.pageX, ship.style.left);
 
         ship.hidden = true;
         let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
@@ -240,18 +246,18 @@ class Game extends Component {
         document.removeEventListener("mouseup", onMouseUp);
         if (canDrop) {
           let counter = this.state.counter + 1;
-          console.log("counter", counter)
+          console.log("counter", counter);
+          this.setState({ disableRotation: false, counter: counter });
           if (counter === 5) {
             this.setState({ startGame: true, disableRotation: true });
           }
-          this.setState({ disableRotation: false, counter: counter });
           //console.log(finalPosition.row, finalPosition.column);
           ship.style.display = "none";
           this.state.human.gameboard.placeShip(
             this.state.human.gameboard.ships[shipName],
             this.state.orientation,
             finalPosition.row,
-            finalPosition.column,
+            finalPosition.column
           );
           console.log(this.state.human.gameboard.getGrid());
 
@@ -281,12 +287,17 @@ class Game extends Component {
     const verticalDrag = () => {
       // Stop rotation while dragging;
       this.setState({ disableRotation: true });
-      console.log(event.target);
-      console.log(event.currentTarget);
+      // console.log(event.target);
+      // console.log(event.currentTarget);
       let ship = event.currentTarget;
 
+      console.log(event.clientX);
+      console.log(event.clientY);
+      console.log(ship.getBoundingClientRect());
       let shiftX = event.clientX - ship.getBoundingClientRect().left;
+      shiftX += 0.005 * window.innerWidth;
       let shiftY = event.clientY - ship.getBoundingClientRect().top;
+      shiftY += 0.005 * window.innerWidth;
 
       // Handle move of mouse with ship attached to it
       let currentDroppable = null;
@@ -303,18 +314,11 @@ class Game extends Component {
       const onMouseMove = (event) => {
         ship.style.opacity = "0.7";
         ship.style.position = "absolute";
-        ship.style.outline = "2px solid white";
 
         // Actually up and down due to rotation
-        ship.style.bottom =
-          event.pageX - shiftX - 0.01 * window.innerWidth - 1 + "px";
-        ship.style.right =
-          event.pageY - shiftY - 0.01 * window.innerWidth - 1 + "px";
+        ship.style.left = event.pageX - shiftX + "px";
+        ship.style.top = event.pageY - shiftY + "px";
 
-        //Good
-        //ship.style.top = event.pageX - shiftX - 0.01 * window.innerWidth - 1 + "px";
-
-        // console.log("pageY", -event.pageY)
         ship.hidden = true;
         let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
         ship.hidden = false;
@@ -432,19 +436,19 @@ class Game extends Component {
         document.removeEventListener("mouseup", onMouseUp);
         if (canDrop) {
           let counter = this.state.counter + 1;
-          if (counter === 5) {
-            this.setState({ startGame: true });
-          }
           this.setState({ disableRotation: false, counter: counter });
-          console.log(finalPosition.row, finalPosition.column);
+          if (counter === 5) {
+            this.setState({ startGame: true, disableRotation: true });
+          }
+          // console.log(finalPosition.row, finalPosition.column);
           ship.style.display = "none";
           this.state.human.gameboard.placeShip(
             this.state.human.gameboard.ships[shipName],
             this.state.orientation,
-            finalPosition.column,
-            finalPosition.row
+            finalPosition.row,
+            finalPosition.column
           );
-          console.log(finalElements);
+          // console.log(finalElements);
           finalElements.forEach((element) => {
             element.style.backgroundColor = "gray";
           });
