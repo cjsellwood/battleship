@@ -55,17 +55,9 @@
 
 @media only screen and (max-width: 600px) {
   .Ships {
-    width: 90vw;
-    height: 90vw;
-    margin: auto;
+    display: none;
   }
-
-  .Ships > div {
-    height: 14vw;
-  }
-
-  .Ships > div > div {
-    width: 9vw;
-    height: 9vw;
+  .VerticalShips {
+    display: none;
   }
 }

@@ -5,5 +5,14 @@
   line-height: 4vw;
   font-weight: bold;
   margin-top: 1vw;
-  margin-bottom: 1vw;
+}
+
+@media only screen and (max-width: 600px) {
+  .Top {
+    height: 15vh;
+    font-size: 15vw;
+    line-height: 10vh;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+  }
 }

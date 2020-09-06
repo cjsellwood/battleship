@@ -502,7 +502,7 @@ class Game extends Component {
             <div className={classes.Buttons}>
               {!this.state.disableRotation ? (
                 <React.Fragment>
-                  <button onClick={() => this.changeOrientation()}>
+                  <button className={classes.HideRotate} onClick={() => this.changeOrientation()}>
                     Rotate
                   </button>
                   <button onClick={() => this.autoPlace()}>Auto Place</button>

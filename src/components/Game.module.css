@@ -114,16 +114,56 @@
 
 @media only screen and (max-width: 600px) {
   .Container {
-    flex-wrap: wrap;
     height: auto;
     flex-direction: column;
   }
 
   .Grid {
-    display: grid;
     grid-template-rows: repeat(10, 9vw);
-    grid-template-columns: repeat(10, 9vw);
-    grid-column-gap: 1px;
     margin: 20px auto;
+    width: 95vw;
+  }
+
+  .Turn {
+    height: 10vw;
+  }
+
+  .Turn button {
+    height: 15vw;
+    width: 80vw;
+    font-size: 7vw;
+    margin-bottom: 2vw;
+    position: absolute;
+    top: 19vh;
+  }
+
+  .Turn button:disabled {
+    font-size: 7vw;
+    width: 80vw;
+  }
+
+  .Buttons {
+    height: 15vw;
+    margin-bottom: 5vw;
+  }
+
+  .Buttons > button {
+    height: 15vw;
+    font-size: 7vw;
+    width: 80vw;
+  }
+
+  .HideRotate {
+    display: none;
+  }
+
+  .Label {
+    font-size: 5vw;
+  }
+
+  .Winner button {
+    height: 15vw;
+    font-size: 7vw;
+    width: 80vw;
   }
 }

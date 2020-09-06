@@ -26,6 +26,7 @@
     width: 9vw;
     height: 9vw;
     font-size: 9vw;
+    grid-template-columns: repeat(10, 9vw);
   }
 
   .Column {
