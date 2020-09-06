@@ -183,7 +183,7 @@ class Game extends Component {
         if (exit) return;
 
         elements.forEach((element) => {
-          element.style.backgroundColor = "rgb(161, 202, 255)";
+          element.style.backgroundColor = "#77b4ee";
         });
         canDrop = false;
       };
@@ -308,7 +308,7 @@ class Game extends Component {
       let finalElements = [];
 
       const onMouseMove = (event) => {
-        ship.style.opacity = "0.7";
+        ship.style.opacity = "0.5";
         ship.style.position = "absolute";
 
         // Actually up and down due to rotation
@@ -319,7 +319,7 @@ class Game extends Component {
         ship.style.display = "none";
         let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
         ship.style.display = "grid";
-        
+
         // Stop from being dropped outside window
         if (!elemBelow) return;
 
@@ -375,7 +375,7 @@ class Game extends Component {
         if (exit) return;
 
         elements.forEach((element) => {
-          element.style.backgroundColor = "rgb(161, 202, 255)";
+          element.style.backgroundColor = "#77b4ee";
         });
         canDrop = false;
       };
@@ -497,6 +497,7 @@ class Game extends Component {
               dragStart={this.handleDragStart}
               orientation={this.state.orientation}
               ships={this.state.human.gameboard.ships}
+              currentTurn={this.state.currentTurn}
             />
             <div className={classes.Buttons}>
               {!this.state.disableRotation ? (

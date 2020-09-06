@@ -44,6 +44,10 @@ const Ships = (props) => {
   } else {
     classList = [classes.Ships];
   }
+  if (props.currentTurn !== null) {
+    console.log(props.currentTurn)
+    classList.push(classes.HideShips)
+  }
   return <div className={classList.join(" ")}>{createShips}</div>;
 };
 
