@@ -21,7 +21,7 @@ const Gameboard = () => {
     if (orientation === "Horizontal") {
       for (let i = 0; i < shipObj.length; i++) {
         // If going to go off board
-        if (column - 1 + i >= 10 || row - 1 + i < 0) {
+        if (column - 1 + i >= 10 || column - 1 + i < 0) {
           return false;
         }
 

@@ -148,7 +148,7 @@ class Game extends Component {
       const leaveDroppable = (elem) => {
         const row = Number(elem.getAttribute("row"));
         const column = Number(elem.getAttribute("column"));
-        const firstPiece = row - position;
+        const firstPiece = column - position;
         // console.log("row", row);
         // console.log("column", column);
         // console.log("position", position);
@@ -166,7 +166,7 @@ class Game extends Component {
         for (let i = firstPiece; i < firstPiece + shipLength; i++) {
           elements.push(
             document.querySelector(
-              `[drop="droppable"][row="${i}"][column="${column}"]`
+              `[drop="droppable"][row="${row}"][column="${i}"]`
             )
           );
         }
@@ -181,7 +181,6 @@ class Game extends Component {
         if (exit) return;
 
         elements.forEach((element) => {
-          console.log("Change to blue");
           element.style.backgroundColor = "rgb(161, 202, 255)";
         });
         canDrop = false;
@@ -191,7 +190,7 @@ class Game extends Component {
       const enterDroppable = (elem) => {
         const row = Number(elem.getAttribute("row"));
         const column = Number(elem.getAttribute("column"));
-        const firstPiece = row - position;
+        const firstPiece = column - position;
         // console.log("row", row);
         // console.log("column", column);
         // console.log("position", position);
@@ -209,7 +208,7 @@ class Game extends Component {
         for (let i = firstPiece; i < firstPiece + shipLength; i++) {
           elements.push(
             document.querySelector(
-              `[drop="droppable"][row="${i}"][column="${column}"]`
+              `[drop="droppable"][row="${row}"][column="${i}"]`
             )
           );
         }
@@ -231,8 +230,8 @@ class Game extends Component {
         // Record where it would be dropped right now
         canDrop = true;
         finalElements = elements;
-        finalPosition.row = firstPiece;
-        finalPosition.column = column;
+        finalPosition.row = row;
+        finalPosition.column = firstPiece;
       };
 
       // Handle letting go of mouse button
@@ -241,8 +240,9 @@ class Game extends Component {
         document.removeEventListener("mouseup", onMouseUp);
         if (canDrop) {
           let counter = this.state.counter + 1;
+          console.log("counter", counter)
           if (counter === 5) {
-            this.setState({ startGame: true });
+            this.setState({ startGame: true, disableRotation: true });
           }
           this.setState({ disableRotation: false, counter: counter });
           //console.log(finalPosition.row, finalPosition.column);
@@ -250,8 +250,8 @@ class Game extends Component {
           this.state.human.gameboard.placeShip(
             this.state.human.gameboard.ships[shipName],
             this.state.orientation,
+            finalPosition.row,
             finalPosition.column,
-            finalPosition.row
           );
           console.log(this.state.human.gameboard.getGrid());
 
@@ -479,9 +479,9 @@ class Game extends Component {
       turnIndicator = <button disabled>Go: {this.state.currentTurn}</button>;
     }
     // Show or hide winner modal
-    let winnerStyle = null
+    let winnerStyle = null;
     if (this.state.winner) {
-      winnerStyle = {top: "0vh"}
+      winnerStyle = { top: "0vh" };
     }
     return (
       <React.Fragment>

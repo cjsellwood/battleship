@@ -9,7 +9,7 @@ const computerGrid = (props) => {
         {row.map((column, colIndex) => {
           let classList = [classes.Column];
           let style = null;
-          if (props.grid[rowIndex][colIndex] === "Hit") {
+          if (column === "Hit") {
             style = {
               backgroundColor: "black",
               backgroundImage: `url(${Fire})`,
@@ -25,9 +25,7 @@ const computerGrid = (props) => {
               className={classList.join(" ")}
               style={style}
             >
-              {props.grid[rowIndex][colIndex] === "x"
-                ? props.grid[rowIndex][colIndex]
-                : null}
+              {column === "x" ? column : null}
             </div>
           );
         })}

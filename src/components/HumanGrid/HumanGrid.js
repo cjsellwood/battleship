@@ -9,18 +9,13 @@ const humanGrid = (props) => {
         {row.map((column, colIndex) => {
           let classList = [classes.Column];
           let style = null;
-          if (props.grid[colIndex][rowIndex] === "Hit") {
+          if (column === "Hit") {
             style = {
               backgroundColor: "black",
               backgroundImage: `url(${Fire})`,
               backgroundSize: "cover",
             };
-          } else if (
-            props.grid[colIndex][rowIndex] !== "x" &&
-            props.grid[colIndex][rowIndex] !== ""
-          ) {
-            // classList.push(classes.ShipGray);
-            // Style changes color if dragging was used before auto place
+          } else if (column !== "x" && column !== "") {
             style = { backgroundColor: "gray" };
           }
 
@@ -33,9 +28,7 @@ const humanGrid = (props) => {
               style={style}
               drop="droppable"
             >
-              {props.grid[colIndex][rowIndex] === "x"
-                ? props.grid[colIndex][rowIndex]
-                : null}
+              {column === "x" ? column : null}
             </div>
           );
         })}
