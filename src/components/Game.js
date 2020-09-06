@@ -98,9 +98,6 @@ class Game extends Component {
       console.log(event.target);
       console.log(event.currentTarget);
       let ship = event.currentTarget;
-      console.log(event.clientX);
-      console.log(event.clientY);
-      console.log(ship.getBoundingClientRect());
 
       // Shift the position of mouse pointer over ship to spot clicked
       let shiftX = event.clientX - ship.getBoundingClientRect().left;
@@ -119,19 +116,18 @@ class Game extends Component {
       };
       let canDrop = false;
       let finalElements = [];
-      //console.log(window.innerHeight, window.innerWidth);
 
       const onMouseMove = (event) => {
         ship.style.opacity = "0.7";
         ship.style.position = "absolute";
-        // ship.style.outline = "2px solid white";
         ship.style.left = event.pageX - shiftX + "px";
         ship.style.top = event.pageY - shiftY + "px";
-        console.log(event.pageX, ship.style.left);
 
-        ship.hidden = true;
+        // Get the element below the ship to know which squares to highlight
+        ship.style.display = "none";
         let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
-        ship.hidden = false;
+        ship.style.display = "grid";
+
         // Stop from being dropped outside window
         if (!elemBelow) return;
 
@@ -319,9 +315,11 @@ class Game extends Component {
         ship.style.left = event.pageX - shiftX + "px";
         ship.style.top = event.pageY - shiftY + "px";
 
-        ship.hidden = true;
+        // Get the element below the ship to know which squares to highlight
+        ship.style.display = "none";
         let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
-        ship.hidden = false;
+        ship.style.display = "grid";
+        
         // Stop from being dropped outside window
         if (!elemBelow) return;
 
