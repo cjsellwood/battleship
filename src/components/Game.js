@@ -15,6 +15,7 @@ class Game extends Component {
     startGame: false,
     counter: 0,
     disableStartBtn: false,
+    winner: null,
   };
 
   // When clicked on a square of the computers board
@@ -24,7 +25,10 @@ class Game extends Component {
       return;
     }
     // Stop clicking on already attacked space
-    if (event.target.textContent === "x") {
+    if (
+      event.target.textContent === "x" ||
+      event.target.style.backgroundColor === "black"
+    ) {
       return;
     }
     //console.log(event);
@@ -34,10 +38,21 @@ class Game extends Component {
     if (this.state.human.attack(newComputer, row, column)) {
       this.setState({ computer: newComputer, currentTurn: "Computer" });
     }
+    // If all computer ships sunk, declare human winner
+    if (newComputer.gameboard.allSunk()) {
+      this.setState({ winner: "Human" });
+      console.log("Human Wins");
+    }
+    // Computer attack after 1 second delay
     setTimeout(() => {
       let newHuman = this.state.human;
       this.state.computer.computerAttack(newHuman);
       this.setState({ human: newHuman, currentTurn: "Human" });
+      // If all human ships sunk, declare computer winner
+      if (newHuman.gameboard.allSunk()) {
+        this.setState({ winner: "Computer" });
+        console.log("Computer Wins");
+      }
     }, 1000);
   };
 
@@ -166,7 +181,7 @@ class Game extends Component {
         if (exit) return;
 
         elements.forEach((element) => {
-          console.log("Change to blue")
+          console.log("Change to blue");
           element.style.backgroundColor = "rgb(161, 202, 255)";
         });
         canDrop = false;
@@ -238,7 +253,7 @@ class Game extends Component {
             finalPosition.column,
             finalPosition.row
           );
-          console.log(this.state.human.gameboard.getGrid())
+          console.log(this.state.human.gameboard.getGrid());
 
           // Set ship as placed
           let newHuman = this.state.human;
@@ -463,8 +478,17 @@ class Game extends Component {
     } else if (this.state.currentTurn) {
       turnIndicator = <button disabled>Go: {this.state.currentTurn}</button>;
     }
+    // Show or hide winner modal
+    let winnerStyle = null
+    if (this.state.winner) {
+      winnerStyle = {top: "0vh"}
+    }
     return (
       <React.Fragment>
+        <div className={classes.Winner} style={winnerStyle}>
+          <div>{this.state.winner} Wins</div>
+          <button onClick={() => window.location.reload()}>Restart</button>
+        </div>
         <div className={classes.Container}>
           <div>
             <Ships

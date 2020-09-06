@@ -19,7 +19,7 @@ const humanGrid = (props) => {
             props.grid[colIndex][rowIndex] !== "x" &&
             props.grid[colIndex][rowIndex] !== ""
           ) {
-            classList.push(classes.ShipGray);
+            // classList.push(classes.ShipGray);
             // Style changes color if dragging was used before auto place
             style = { backgroundColor: "gray" };
           }
