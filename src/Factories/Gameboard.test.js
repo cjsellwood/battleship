@@ -68,7 +68,7 @@ test("Test placement of ship vertically", () => {
 });
 
 test("Test attack on board that misses", () => {
-  expect(Gameboard().receiveAttack(5, 5)).toStrictEqual(true);
+  expect(Gameboard().receiveAttack(5, 5)).toStrictEqual("x");
 });
 
 test("Test attack on board that has already been hit", () => {
@@ -81,7 +81,7 @@ test("Test attack on board with ship", () => {
   const testGameboard = Gameboard();
   const shipObj = Ship("Battleship");
   testGameboard.placeShip(shipObj, "Horizontal", 5, 5);
-  expect(testGameboard.receiveAttack(5, 6)).toStrictEqual(true);
+  expect(testGameboard.receiveAttack(5, 6)).toStrictEqual("Hit");
 });
 
 test("Test if all ships sunk with a ship on board", () => {

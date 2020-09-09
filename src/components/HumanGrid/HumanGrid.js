@@ -9,12 +9,14 @@ const humanGrid = (props) => {
         {row.map((column, colIndex) => {
           let classList = [classes.Column];
           let style = null;
+          // If ship hit display fire image
           if (column === "Hit") {
             style = {
               backgroundColor: "black",
               backgroundImage: `url(${Fire})`,
               backgroundSize: "cover",
             };
+          // If ship, display gray box
           } else if (column !== "x" && column !== "") {
             style = { backgroundColor: "gray" };
           }

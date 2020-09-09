@@ -1,3 +1,5 @@
+A game of battleship versus a computer. Ships can be placed either horizontally or vertically by dragging them to the desired position or pressing a button to place automatically. On mobile ships can only be placed automatically. 
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

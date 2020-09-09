@@ -1,15 +1,57 @@
 import Gameboard from "./Gameboard";
 
 const Player = (name) => {
-  const getName = () => name;
-
   const gameboard = Gameboard();
 
+  // Attack the oppositions gameboard
   const attack = (opposition, row, column) => {
     return opposition.gameboard.receiveAttack(row, column);
   };
 
   const hits = [];
+
+  // Computer attacks the humans board
+  const computerAttack = (opposition) => {
+    // Random first attack
+    if (hits.length === 0) {
+      randomAttack(opposition);
+
+      // Second attack is either adjacent or random
+    } else if (hits.length === 1) {
+      let lastAttack = hits[hits.length - 1];
+      if (lastAttack.result === "Hit") {
+        // If can't find available adjacent do random attack
+        if (!adjacentAttack(opposition, lastAttack)) {
+          randomAttack(opposition);
+          return;
+        }
+      } else {
+        randomAttack(opposition);
+      }
+      // Attack next spot in pattern if two hits consecutively
+    } else {
+      let lastAttack = hits[hits.length - 1];
+      let secondLast = hits[hits.length - 2];
+      if (lastAttack.result === "Hit" && secondLast.result === "Hit") {
+        // If no pattern found do random attack
+        if (!sequentialAttack(opposition, lastAttack, secondLast)) {
+          randomAttack(opposition);
+          return;
+        }
+      } else {
+        if (lastAttack.result === "Hit") {
+          // If can't find available adjacent do random attack
+          if (!adjacentAttack(opposition, lastAttack)) {
+            randomAttack(opposition);
+            return;
+          }
+        } else {
+          randomAttack(opposition);
+        }
+      }
+    }
+    return hits[hits.length - 1].result;
+  };
 
   // Randomly choose adjacent square to last hit
   const adjacentAttack = (opposition, lastAttack) => {
@@ -55,11 +97,13 @@ const Player = (name) => {
       result = opposition.gameboard.receiveAttack(row, column);
 
       i += 1;
+      // Return if empty adjacent space not found
       if (i === 100) {
         return false;
       }
     }
 
+    // Record hit
     let lastHit = {
       row,
       column,
@@ -69,6 +113,7 @@ const Player = (name) => {
     return result;
   };
 
+  // If 2 hits in a row continue pattern
   const sequentialAttack = (opposition, lastAttack, secondLast) => {
     let row,
       column = null;
@@ -100,6 +145,7 @@ const Player = (name) => {
 
     let result = opposition.gameboard.receiveAttack(row, column);
 
+    // Record hit
     let lastHit = {
       row,
       column,
@@ -114,11 +160,15 @@ const Player = (name) => {
     let row = Math.floor(Math.random() * 10) + 1;
     let column = Math.floor(Math.random() * 10) + 1;
     let result = opposition.gameboard.receiveAttack(row, column);
+
+    // Ensure that hits available space
     while (result === false) {
       row = Math.floor(Math.random() * 10) + 1;
       column = Math.floor(Math.random() * 10) + 1;
       result = opposition.gameboard.receiveAttack(row, column);
     }
+
+    // Record hit
     let lastHit = {
       row,
       column,
@@ -128,48 +178,7 @@ const Player = (name) => {
     return result;
   };
 
-  const computerAttack = (opposition) => {
-    // Random first attack
-    if (hits.length === 0) {
-      randomAttack(opposition);
-
-      // Second attack is either adjacent or random
-    } else if (hits.length === 1) {
-      let lastAttack = hits[hits.length - 1];
-      if (lastAttack.result === "Hit") {
-        // If can't find available adjacent do random attack
-        if (!adjacentAttack(opposition, lastAttack)) {
-          randomAttack(opposition);
-          return;
-        }
-      } else {
-        randomAttack(opposition);
-      }
-      // Attack next spot in pattern if two hits consecutively
-    } else {
-      let lastAttack = hits[hits.length - 1];
-      let secondLast = hits[hits.length - 2];
-      if (lastAttack.result === "Hit" && secondLast.result === "Hit") {
-        // If no pattern found do random attack
-        if (!sequentialAttack(opposition, lastAttack, secondLast)) {
-          randomAttack(opposition);
-          return;
-        }
-      } else {
-        if (lastAttack.result === "Hit") {
-          // If can't find available adjacent do random attack
-          if (!adjacentAttack(opposition, lastAttack)) {
-            randomAttack(opposition);
-            return;
-          }
-        } else {
-          randomAttack(opposition);
-        }
-      }
-    }
-  };
   return {
-    getName,
     attack,
     gameboard,
     computerAttack,

@@ -1,0 +1,45 @@
+.Winner {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 100vh;
+  transition: all 2s ease-out;
+  background-color: rgb(255, 255, 255);
+  text-align: center;
+  font-size: 7vw;
+}
+
+.Winner div {
+  line-height: 40vh;
+}
+
+.Winner button {
+  width: 41%;
+  border: none;
+  font-size: 1.2vw;
+  outline: none;
+  height: 5vw;
+  margin: 0.1vw;
+  background-color: rgb(212, 212, 212);
+  color: rgb(0, 0, 0);
+  margin-bottom: 10vw;
+}
+
+.Winner button:hover {
+  background-color: rgb(187, 187, 187);
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+  .Winner button {
+    height: 15vw;
+    font-size: 7vw;
+    width: 80vw;
+  }
+}

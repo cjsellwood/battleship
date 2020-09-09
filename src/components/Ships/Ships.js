@@ -1,20 +1,11 @@
 import React from "react";
 import classes from "./Ships.module.css";
-// import { ItemTypes } from "./Constants";
-// import { useDrag } from "react-dnd";
 
 const Ships = (props) => {
-  // const [{ isDragging }, drag] = useDrag({
-  //   item: { type: ItemTypes.SHIP },
-  //   collect: (monitor) => ({
-  //     isDragging: !!monitor.isDragging(),
-  //   }),
-  // });
-
   const createShips = [];
   for (const ship in props.ships) {
     let squares = [];
-    for (let i = 0; i < props.ships[ship].length; i++) {
+    for (let i = 0; i < props.ships[ship].getLength(); i++) {
       squares.push(
         <div
           name={props.ships[ship].getName()}
@@ -26,27 +17,24 @@ const Ships = (props) => {
     createShips.push(
       <div
         onMouseDown={(event) => props.dragStart(event)}
-        //draggable="true"
         key={props.ships[ship].getName()}
-        // ref={drag}
-        // style={{
-        //   opacity: isDragging ? 0.5 : 1,
-        // }}
       >
         {squares}
       </div>
     );
   }
 
+  // Change orientation of ships by changing classes
   let classList = [];
   if (props.orientation === "Vertical") {
     classList = [classes.VerticalShips];
   } else {
     classList = [classes.Ships];
   }
+
+  // Hide ships if on mobile
   if (props.currentTurn !== null) {
-    console.log(props.currentTurn)
-    classList.push(classes.HideShips)
+    classList.push(classes.HideShips);
   }
   return <div className={classList.join(" ")}>{createShips}</div>;
 };

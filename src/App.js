@@ -7,7 +7,7 @@ class App extends Component {
     return (
       <div>
         <div className={classes.Top}>Battleship</div>
-        <Game/>
+        <Game />
       </div>
     );
   }
