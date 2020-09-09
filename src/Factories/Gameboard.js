@@ -53,6 +53,7 @@ const Gameboard = () => {
     }
   };
 
+  // Place ships in random positions
   const autoPlaceShips = () => {
     for (const ship in ships) {
       if (!ships[ship].getPlaced()) {
@@ -68,19 +69,21 @@ const Gameboard = () => {
     }
   };
 
+  // Attack the board
   const receiveAttack = (row, column) => {
+    // Set as missed
     if (grid[row - 1][column - 1] === "") {
-      // Set as missed
       grid[row - 1][column - 1] = "x";
-      return true;
+      return "x";
+
+    // Don't allow if already attacked
     } else if (
       grid[row - 1][column - 1] === "x" ||
       grid[row - 1][column - 1] === "Hit"
     ) {
-      // Disallow
       return false;
+    // If a ship hit
     } else {
-      // Ship hit
       const content = grid[row - 1][column - 1];
       const shipName = content.slice(0, content.length - 1);
       const hitPosition = content[content.length - 1];
@@ -89,7 +92,7 @@ const Gameboard = () => {
 
       // Mark as hit
       grid[row - 1][column - 1] = "Hit";
-      return true;
+      return "Hit";
     }
   };
 

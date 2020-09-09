@@ -41,6 +41,7 @@ class Game extends Component {
     // If all computer ships sunk, declare human winner
     if (newComputer.gameboard.allSunk()) {
       this.setState({ winner: "Human" });
+      return
     }
     // Computer attack after 1 second delay
     setTimeout(() => {
